@@ -2,7 +2,7 @@
  * Tobi
  *
  * @author rqrauhvmra
- * @version 1.7.3
+ * @version 1.7.4
  * @url https://github.com/rqrauhvmra/Tobi
  *
  * MIT License
@@ -43,6 +43,10 @@
       counter = null,
       currentIndex = 0,
       drag = {},
+      draggingX = false,
+      draggingY = false,
+      swipingX = false,
+      swipingY = false,
       pointerDown = false,
       lastFocus = null,
       firstFocusableEl = null,
@@ -71,6 +75,7 @@
         close: true,
         closeText: '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path></svg>',
         closeLabel: 'Close',
+        loadingIndicatorLabel: 'Image loading',
         counter: true,
         download: false, // TODO
         downloadText: '', // TODO
@@ -121,7 +126,7 @@
             figcaption = document.createElement('figcaption'),
             image = document.createElement('img'),
             thumbnail = element.querySelector('img'),
-            loader = document.createElement('div')
+            loadingIndicator = document.createElement('div')
 
           image.style.opacity = '0'
 
@@ -158,11 +163,13 @@
           // Add figure to container
           container.appendChild(figure)
 
-          //  Create loader
-          loader.className = 'tobi-loader'
+          // Create loading indicator
+          loadingIndicator.className = 'tobi-loader'
+          loadingIndicator.setAttribute('role', 'progressbar')
+          loadingIndicator.setAttribute('aria-label', config.loadingIndicatorLabel)
 
-          // Add loader to container
-          container.appendChild(loader)
+          // Add loading indicator to container
+          container.appendChild(loadingIndicator)
 
           // Register type
           container.setAttribute('data-type', 'image')
@@ -181,10 +188,10 @@
           }
 
           var figcaption = container.querySelector('figcaption'),
-            loader = container.querySelector('.tobi-loader')
+            loadingIndicator = container.querySelector('.tobi-loader')
 
           image.onload = function () {
-            container.removeChild(loader)
+            container.removeChild(loadingIndicator)
             image.style.opacity = '1'
 
             if (figcaption) {
@@ -933,7 +940,19 @@
         drag.endX = event.touches[0].pageX
         drag.endY = event.touches[0].pageY
 
-        slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
+        if (Math.abs(drag.startX - drag.endX) > 0 && !swipingY && config.swipeClose) {
+          // Horizontal swipe
+          slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
+
+          swipingX = true
+          swipingY = false
+        } else if (Math.abs(drag.startY - drag.endY) > 0 && !swipingX) {
+          // Vertical swipe
+          slider.style[transformProperty] = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
+
+          swipingX = false
+          swipingY = true
+        }
       }
     }
 
@@ -947,6 +966,9 @@
       pointerDown = false
 
       if (drag.endX) {
+        swipingX = false
+        swipingY = false
+
         updateAfterDrag()
       }
 
@@ -984,7 +1006,19 @@
         drag.endX = event.pageX
         drag.endY = event.pageY
 
-        slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
+        if (Math.abs(drag.startX - drag.endX) > 0 && !draggingY && config.swipeClose) {
+          // Horizontal drag
+          slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
+
+          draggingX = true
+          draggingY = false
+        } else if (Math.abs(drag.startY - drag.endY) > 0 && !draggingX) {
+          // Vertical drag
+          slider.style[transformProperty] = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
+
+          draggingX = false
+          draggingY = true
+        }
       }
     }
 
@@ -998,6 +1032,9 @@
       pointerDown = false
 
       if (drag.endX) {
+        draggingX = false
+        draggingY = false
+
         updateAfterDrag()
       }
 
