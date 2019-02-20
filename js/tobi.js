@@ -2,7 +2,7 @@
  * Tobi
  *
  * @author rqrauhvmra
- * @version 1.8.0
+ * @version 1.8.1
  * @url https://github.com/rqrauhvmra/Tobi
  *
  * MIT License
@@ -43,8 +43,8 @@
       counter = null,
       currentIndex = 0,
       drag = {},
-      draggingX = false,
-      draggingY = false,
+      isDraggingX = false,
+      isDraggingY = false,
       pointerDown = false,
       lastFocus = null,
       firstFocusableEl = null,
@@ -87,12 +87,13 @@
         zoomText: '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><polyline points="21 16 21 21 16 21"/><polyline points="8 21 3 21 3 16"/><polyline points="16 3 21 3 21 8"/><polyline points="3 8 3 3 8 3"/></svg>',
         docClose: true,
         swipeClose: true,
-        scroll: false,
+        hideScrollbar: true,
         draggable: true,
         threshold: 100,
         rtl: false, // TODO
         loop: false, // TODO
-        autoplayVideo: false
+        autoplayVideo: false,
+        theme: 'dark'
       }
 
       if (userOptions) {
@@ -347,7 +348,8 @@
             videoId: el.getAttribute('data-id'),
             playerVars: {
               'controls': el.getAttribute('data-controls') || 1,
-              'rel': 0
+              'rel': 0,
+              'playsinline': 1
             }
           })
 
@@ -371,11 +373,15 @@
         },
 
         onLeave: function (container) {
-          player[container.getAttribute('data-player')].pauseVideo()
+          if (player[container.getAttribute('data-player')].getPlayerState() === 1) {
+            player[container.getAttribute('data-player')].pauseVideo()
+          }
         },
 
         onCleanup: function (container) {
-          player[container.getAttribute('data-player')].pauseVideo()
+          if (player[container.getAttribute('data-player')].getPlayerState() === 1) {
+            player[container.getAttribute('data-player')].pauseVideo()
+          }
         }
       }
     }
@@ -478,6 +484,7 @@
         createLightboxSlide(el)
 
         if (isOpen()) {
+          recheckConfig()
           updateLightbox()
         }
 
@@ -498,7 +505,7 @@
       lightbox = document.createElement('div')
       lightbox.setAttribute('role', 'dialog')
       lightbox.setAttribute('aria-hidden', 'true')
-      lightbox.className = 'tobi'
+      lightbox.className = 'tobi tobi--theme-' + config.theme
 
       // Create slider container
       slider = document.createElement('div')
@@ -538,8 +545,10 @@
       browserWindow.addEventListener('resize', function () {
         if (!resizeTicking) {
           resizeTicking = true
+
           browserWindow.requestAnimationFrame(function () {
             updateOffset()
+
             resizeTicking = false
           })
         }
@@ -565,10 +574,6 @@
             sliderElement.style.position = 'absolute'
             sliderElement.style.left = x * 100 + '%'
             sliderElementContent.className = 'tobi__slider__slide__content'
-
-            if (config.draggable) {
-              sliderElementContent.classList.add('draggable')
-            }
 
             // Create type elements
             supportedElements[index].init(el, sliderElementContent)
@@ -613,26 +618,12 @@
         throw new Error('Ups, I can\'t find slide ' + index + '.')
       }
 
-      if (!config.scroll) {
+      if (config.hideScrollbar) {
         document.documentElement.classList.add('tobi-is-open')
         document.body.classList.add('tobi-is-open')
       }
 
-      // Hide buttons if necessary
-      if (!config.nav || elementsLength === 1 || (config.nav === 'auto' && isTouchDevice())) {
-        prevButton.setAttribute('aria-hidden', 'true')
-        nextButton.setAttribute('aria-hidden', 'true')
-      } else {
-        prevButton.setAttribute('aria-hidden', 'false')
-        nextButton.setAttribute('aria-hidden', 'false')
-      }
-
-      // Hide counter if necessary
-      if (!config.counter || elementsLength === 1) {
-        counter.setAttribute('aria-hidden', 'true')
-      } else {
-        counter.setAttribute('aria-hidden', 'false')
-      }
+      recheckConfig()
 
       // Hide close if necessary
       if (!config.close) {
@@ -680,7 +671,7 @@
         throw new Error('Tobi is already closed.')
       }
 
-      if (!config.scroll) {
+      if (config.hideScrollbar) {
         document.documentElement.classList.remove('tobi-is-open')
         document.body.classList.remove('tobi-is-open')
       }
@@ -925,7 +916,7 @@
         prev()
       } else if (event.target === nextButton) {
         next()
-      } else if (event.target === closeButton || event.target.className === 'tobi__slider__slide') {
+      } else if (event.target === closeButton || (event.target.className === 'tobi__slider__slide' && config.docClose)) {
         close()
       }
 
@@ -972,8 +963,8 @@
      *
      */
     var touchstartHandler = function touchstartHandler (event) {
-      // Prevent dragging / swiping on textareas inputs, selects and videos or outside the content
-      if (isIgnoreElement(event.target) || event.target.className === 'tobi__slider__slide') {
+      // Prevent dragging / swiping on textareas inputs and selects
+      if (isIgnoreElement(event.target)) {
         return
       }
 
@@ -983,6 +974,8 @@
 
       drag.startX = event.touches[0].pageX
       drag.startY = event.touches[0].pageY
+
+      slider.classList.add('tobi__slider--is-dragging')
     }
 
     /**
@@ -1011,9 +1004,11 @@
 
       pointerDown = false
 
+      slider.classList.remove('tobi__slider--is-dragging')
+
       if (drag.endX) {
-        draggingX = false
-        draggingY = false
+        isDraggingX = false
+        isDraggingY = false
 
         updateAfterDrag()
       }
@@ -1026,8 +1021,8 @@
      *
      */
     var mousedownHandler = function mousedownHandler (event) {
-      // Prevent dragging / swiping on textareas inputs, selects and videos or outside the content
-      if (isIgnoreElement(event.target) || event.target.className === 'tobi__slider__slide') {
+      // Prevent dragging / swiping on textareas inputs and selects
+      if (isIgnoreElement(event.target)) {
         return
       }
 
@@ -1035,8 +1030,11 @@
       event.stopPropagation()
 
       pointerDown = true
+
       drag.startX = event.pageX
       drag.startY = event.pageY
+
+      slider.classList.add('tobi__slider--is-dragging')
     }
 
     /**
@@ -1063,9 +1061,11 @@
 
       pointerDown = false
 
+      slider.classList.remove('tobi__slider--is-dragging')
+
       if (drag.endX) {
-        draggingX = false
-        draggingY = false
+        isDraggingX = false
+        isDraggingY = false
 
         updateAfterDrag()
       }
@@ -1078,18 +1078,18 @@
      *
      */
     var doSwipe = function doSwipe () {
-      if (Math.abs(drag.startX - drag.endX) > 0 && !draggingY && config.swipeClose) {
+      if (Math.abs(drag.startX - drag.endX) > 0 && !isDraggingY && config.swipeClose) {
         // Horizontal swipe
         slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
 
-        draggingX = true
-        draggingY = false
-      } else if (Math.abs(drag.startY - drag.endY) > 0 && !draggingX) {
+        isDraggingX = true
+        isDraggingY = false
+      } else if (Math.abs(drag.startY - drag.endY) > 0 && !isDraggingX) {
         // Vertical swipe
         slider.style[transformProperty] = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
 
-        draggingX = false
-        draggingY = true
+        isDraggingX = false
+        isDraggingY = true
       }
     }
 
@@ -1102,14 +1102,8 @@
         document.addEventListener('keydown', keydownHandler)
       }
 
-      // Click events
-      if (config.docClose) {
-        lightbox.addEventListener('click', clickHandler)
-      }
-
-      prevButton.addEventListener('click', clickHandler)
-      nextButton.addEventListener('click', clickHandler)
-      closeButton.addEventListener('click', clickHandler)
+      // Click event
+      lightbox.addEventListener('click', clickHandler)
 
       if (config.draggable) {
         if (isTouchDevice()) {
@@ -1135,26 +1129,16 @@
         document.removeEventListener('keydown', keydownHandler)
       }
 
-      // Click events
-      if (config.docClose) {
-        lightbox.removeEventListener('click', clickHandler)
-      }
-
-      prevButton.removeEventListener('click', clickHandler)
-      nextButton.removeEventListener('click', clickHandler)
-      closeButton.removeEventListener('click', clickHandler)
+      // Click event
+      lightbox.removeEventListener('click', clickHandler)
 
       if (config.draggable) {
         if (isTouchDevice()) {
           // Touch events
-          lightbox.addEventListener('touchstart', touchstartHandler)
-          lightbox.addEventListener('touchmove', touchmoveHandler)
-          lightbox.addEventListener('touchend', touchendHandler)
+          lightbox.removeEventListener('touchstart', touchstartHandler)
+          lightbox.removeEventListener('touchmove', touchmoveHandler)
+          lightbox.removeEventListener('touchend', touchendHandler)
         }
-        // Touch events
-        lightbox.removeEventListener('touchstart', touchstartHandler)
-        lightbox.removeEventListener('touchmove', touchmoveHandler)
-        lightbox.removeEventListener('touchend', touchendHandler)
 
         // Mouse events
         lightbox.removeEventListener('mousedown', mousedownHandler)
@@ -1183,6 +1167,32 @@
         Array.prototype.forEach.call(sources, function (source) {
           source.setAttribute('src', '')
         })
+      }
+    }
+
+    /**
+     * Update Config
+     *
+     */
+    var recheckConfig = function recheckConfig () {
+      if (config.draggable && elementsLength > 1 && !slider.classList.contains('tobi__slider--is-draggable')) {
+        slider.classList.add('tobi__slider--is-draggable')
+      }
+
+      // Hide buttons if necessary
+      if (!config.nav || elementsLength === 1 || (config.nav === 'auto' && isTouchDevice())) {
+        prevButton.setAttribute('aria-hidden', 'true')
+        nextButton.setAttribute('aria-hidden', 'true')
+      } else {
+        prevButton.setAttribute('aria-hidden', 'false')
+        nextButton.setAttribute('aria-hidden', 'false')
+      }
+
+      // Hide counter if necessary
+      if (!config.counter || elementsLength === 1) {
+        counter.setAttribute('aria-hidden', 'true')
+      } else {
+        counter.setAttribute('aria-hidden', 'false')
       }
     }
 
@@ -1237,7 +1247,7 @@
      *
      */
     var isIgnoreElement = function isIgnoreElement (el) {
-      return ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT', 'VIDEO'].indexOf(el.nodeName) !== -1
+      return ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(el.nodeName) !== -1 || el === prevButton || el === nextButton || el === closeButton || elementsLength === 1
     }
 
     /**

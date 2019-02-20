@@ -1,5 +1,6 @@
-@import '_variables.scss';
-@import '_functions.scss';
+@import
+  '_variables.scss',
+  '_functions.scss';
 
 /* Link */
 .tobi-zoom {
@@ -55,7 +56,7 @@
   bottom: 0;
   box-sizing: border-box;
   contain: strict;
-  font-size: $baseFontSize;
+  font-size: #{$baseFontSize}px;
   left: 0;
   line-height: 1.5555555555555556;
   overflow: hidden;
@@ -83,11 +84,25 @@
   position: absolute;
   right: 0;
   top: 0;
-  transition: transform .3s cubic-bezier(.19, 1, .22, 1);
   will-change: transform;
 
-  @media screen and (prefers-reduced-motion: reduce) {
-    transition: none;
+
+  &:not(&--is-dragging) {
+    transition-duration: $transitionDuration;
+    transition-property: transform;
+    transition-timing-function: $transitionTimingFunction;
+
+    @media screen and (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &--is-draggable &__slide__content {
+    cursor: grab;
+  }
+
+  &--is-dragging &__slide__content {
+    cursor: grabbing;
   }
 }
 
@@ -104,15 +119,6 @@
 .tobi__slider__slide__content {
 
 
-
-  &.draggable {
-    cursor: grab;
-
-
-    &:active {
-      cursor: grabbing;
-    }
-  }
 
   > figure {
     margin: 0;
@@ -189,7 +195,7 @@
 }
 
 /* Buttons */
-.tobi button {
+.tobi > button {
   align-items: center;
   appearance: none;
   background-color: $buttonBackground;
@@ -202,16 +208,20 @@
   line-height: 1;
   margin: 0;
   opacity: .5;
-  padding-top: em(4);
+  padding-bottom: em(4);
   padding-left: em(4);
   padding-right: em(4);
-  padding-bottom: em(4);
+  padding-top: em(4);
   position: absolute;
-  transition: opacity .5s cubic-bezier(.19, 1, .22, 1);
-  will-change: opacity;
+  touch-action: manipulation;
+  transition-duration: $transitionDuration;
+  transition-property: opacity, transform;
+  transition-timing-function: $transitionTimingFunction;
+  will-change: opacity, transform;
 
   @media screen and (prefers-reduced-motion: reduce) {
     transition: none;
+    will-change: opacity;
   }
 
 
@@ -229,10 +239,10 @@
   &:focus,
   &:hover {
     opacity: 1;
-    transition: opacity .5s cubic-bezier(.19, 1, .22, 1);
+    transform: scale(.84);
 
     @media screen and (prefers-reduced-motion: reduce) {
-      transition: none;
+      transform: none;
     }
   }
 
@@ -318,13 +328,7 @@
 }
 
 @keyframes spin {
-
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
+  to {
     transform: rotate(360deg);
   }
-
 }

@@ -1,20 +1,23 @@
-$zoomIconBackground: rgba(26, 42, 58, .94);
-$zoomIconColor: #fff;
+$baseFontSize: 18 !default;
 
-$lightboxBackground: rgba(26, 42, 58, .94);
+$transitionDuration: .3s !default;
+$transitionTimingFunction: cubic-bezier(.19, 1, .22, 1) !default;
 
-$figcaptionBackground: rgba(255, 255, 255, .94);
-$figcaptionColor: #1a2a3a;
+$zoomIconBackground: rgba(26, 42, 58, .94) !default;
+$zoomIconColor: #fff !default;
 
-$counterBackground: transparent;
-$counterColor: #fff;
+$lightboxBackground: rgba(26, 42, 58, .94) !default;
 
-$buttonBackground: transparent;
-$buttonColor: #fff;
+$figcaptionBackground: rgba(255, 255, 255, .94) !default;
+$figcaptionColor: #1a2a3a !default;
 
-$loaderColor: #fff;
+$counterBackground: transparent !default;
+$counterColor: #fff !default;
 
-$slideMaxHeight: 85vh;
-$slideMaxWidth: 85vw;
+$buttonBackground: transparent !default;
+$buttonColor: #fff !default;
 
-$baseFontSize: 18;
+$loaderColor: #fff !default;
+
+$slideMaxHeight: 85vh !default;
+$slideMaxWidth: 85vw !default;
