@@ -1,6 +1,6 @@
 # Tobi
 
-[![Version](https://img.shields.io/badge/Version-1.8.1-1a2a3a.svg)](https://github.com/rqrauhvmra/Tobi/releases)
+[![Version](https://img.shields.io/badge/Version-1.8.2-1a2a3a.svg)](https://github.com/rqrauhvmra/Tobi/releases)
 [![License](https://img.shields.io/badge/License-MIT-1a2a3a.svg)](https://github.com/rqrauhvmra/tobi/blob/master/LICENSE.md)
 ![Dependecies](https://img.shields.io/badge/Dependencies-none-1a2a3a.svg)
 [![Amazon wishlist](https://img.shields.io/badge/Amazon_wishlist-0366d6.svg)](https://www.amazon.de/hz/wishlist/ls/29WXITO63O0BX)
