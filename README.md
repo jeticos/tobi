@@ -5,6 +5,8 @@
 ![Dependecies](https://img.shields.io/badge/Dependencies-none-1a2a3a.svg)
 [![Amazon wishlist](https://img.shields.io/badge/Amazon_wishlist-0366d6.svg)](https://www.amazon.de/hz/wishlist/ls/29WXITO63O0BX)
 
+## v2 is coming soon!
+
 An accessible, simple and light-weight open source lightbox script with no dependencies.
 
 [Play on CodePen](https://codepen.io/collection/nbqJVV)
