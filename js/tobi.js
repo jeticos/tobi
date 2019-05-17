@@ -31,17 +31,13 @@
     var config = {},
       browserWindow = window,
       transformProperty = null,
-      gallery = [],
       figcaptionId = 0,
-      elementsLength = 0,
       lightbox = null,
-      slider = null,
-      sliderElements = [],
       prevButton = null,
       nextButton = null,
       closeButton = null,
       counter = null,
-      currentIndex = 0,
+      sliderContainer = null,
       drag = {},
       isDraggingX = false,
       isDraggingY = false,
@@ -52,11 +48,24 @@
       offset = null,
       offsetTmp = null,
       resizeTicking = false,
+      touchmoveTicking = false,
+      mousemoveTicking = false,
       isYouTubeDependencieLoaded = false,
       waitingEls = [],
       player = [],
       playerId = 0,
-      x = 0
+      groupAtts = {
+        gallery: [],
+        slider: null,
+        sliderElements: [],
+        elementsLength: 0,
+        currentIndex: 0,
+        x: 0
+      },
+      groups = {},
+      currentGroup = 'default',
+      addElements = false,
+      tmpElements = []
 
     /**
      * Merge default options with user options
@@ -93,7 +102,9 @@
         rtl: false, // TODO
         loop: false, // TODO
         autoplayVideo: false,
-        theme: 'dark'
+        theme: 'dark',
+        grouping: false,
+        groupAttribute: 'tobi-group'
       }
 
       if (userOptions) {
@@ -451,16 +462,68 @@
     }
 
     /**
+     * Get group name from element
+     *
+     * @param {HTMLElement} el
+     * @return {string}
+     */
+    var getGroupName = function getGroupName (el) {
+      if (!config.grouping) return 'default'
+
+      let attr = 'data-' + config.groupAttribute
+      return el.hasAttribute(attr) ? (el.getAttribute(attr).length > 0 ? el.getAttribute(attr) : 'default') : 'default'
+    }
+
+    /**
+     * Add an object in groups if not exists
+     *
+     * @param el
+     */
+    var createGroupObject = function createGroupObject (el) {
+      let groupName = getGroupName(el)
+      if (!groups.hasOwnProperty(groupName)) groups[groupName] = copyObject(groupAtts)
+      currentGroup = groupName
+      createSlider()
+    }
+
+    /**
+     * Get the current used group object
+     * @return {object}
+     */
+    var getGroupObject = function getGroupObject () {
+      return groups[currentGroup]
+    }
+
+    /**
+     * Copy an object. (The secure way)
+     *
+     * @param {object} object
+     * @return {object}
+     */
+    var copyObject = function copyObject (object) {
+      return JSON.parse(JSON.stringify(object))
+    }
+
+    /**
      * Add element
      *
      * @param {HTMLElement} el - Element to add
      * @param {function} callback - Optional callback to call after add
      */
     var add = function add (el, callback) {
+      if (isOpen() && getGroupName(el) !== currentGroup) {
+        addElements = true
+        tmpElements.push(el)
+        return
+      }
+
+      createGroupObject(el)
+      let group = getGroupObject()
+
       // Check if element already exists
-      if (gallery.indexOf(el) === -1) {
-        gallery.push(el)
-        elementsLength++
+      if (group.gallery.indexOf(el) === -1) {
+        group.gallery.push(el)
+        group.elementsLength++
 
         // Set zoom icon if necessary
         if (config.zoom && el.querySelector('img')) {
@@ -476,8 +539,9 @@
         // Bind click event handler
         el.addEventListener('click', function (event) {
           event.preventDefault()
+          selectGroup(getGroupName(this))
 
-          open(gallery.indexOf(this))
+          open(group.gallery.indexOf(this))
         })
 
         // Create the slide
@@ -497,6 +561,20 @@
     }
 
     /**
+     * Create a new slider
+     */
+    var createSlider = function createSlider () {
+      let group = getGroupObject()
+
+      // This group already has a slider
+      if (group.slider) return
+
+      group.slider = document.createElement('div')
+      group.slider.className = 'tobi__slider'
+      sliderContainer.appendChild(group.slider)
+    }
+
+    /**
      * Create the lightbox
      *
      */
@@ -507,10 +585,10 @@
       lightbox.setAttribute('aria-hidden', 'true')
       lightbox.className = 'tobi tobi--theme-' + config.theme
 
-      // Create slider container
-      slider = document.createElement('div')
-      slider.className = 'tobi__slider'
-      lightbox.appendChild(slider)
+      // Create slider container where we can store our sliders
+      sliderContainer = document.createElement('div')
+      sliderContainer.className = 'tobi__slider--container'
+      lightbox.appendChild(sliderContainer)
 
       // Create previous button
       prevButton = document.createElement('button')
@@ -566,13 +644,15 @@
       for (var index in supportedElements) {
         if (supportedElements.hasOwnProperty(index)) {
           if (supportedElements[index].checkSupport(el)) {
+            let group = getGroupObject()
+
             // Create slide elements
             var sliderElement = document.createElement('div'),
               sliderElementContent = document.createElement('div')
 
             sliderElement.className = 'tobi__slider__slide'
             sliderElement.style.position = 'absolute'
-            sliderElement.style.left = x * 100 + '%'
+            sliderElement.style.left = group.x * 100 + '%'
             sliderElementContent.className = 'tobi__slider__slide__content'
 
             // Create type elements
@@ -582,10 +662,10 @@
             sliderElement.appendChild(sliderElementContent)
 
             // Add slider element to slider
-            slider.appendChild(sliderElement)
-            sliderElements.push(sliderElement)
+            group.slider.appendChild(sliderElement)
+            group.sliderElements.push(sliderElement)
 
-            ++x
+            ++group.x
 
             break
           }
@@ -600,6 +680,8 @@
      * @param {function} callback - Optional callback to call after open
      */
     var open = function open (index, callback) {
+      let group = getGroupObject()
+
       if (!isOpen() && !index) {
         index = 0
       }
@@ -609,14 +691,16 @@
           throw new Error('Ups, Tobi is aleady open.')
         }
 
-        if (index === currentIndex) {
+        if (index === group.currentIndex) {
           throw new Error('Ups, slide ' + index + ' is already selected.')
         }
       }
 
-      if (index === -1 || index >= elementsLength) {
+      if (index === -1 || index >= group.elementsLength) {
         throw new Error('Ups, I can\'t find slide ' + index + '.')
       }
+
+      // setSlides()
 
       if (config.hideScrollbar) {
         document.documentElement.classList.add('tobi-is-open')
@@ -635,7 +719,7 @@
       lastFocus = document.activeElement
 
       // Set current index
-      currentIndex = index
+      group.currentIndex = index
 
       // Clear drag
       clearDrag()
@@ -644,7 +728,7 @@
       bindEvents()
 
       // Load slide
-      load(currentIndex)
+      load(group.currentIndex)
 
       // Makes lightbox appear, too
       lightbox.setAttribute('aria-hidden', 'false')
@@ -653,8 +737,8 @@
       updateLightbox()
 
       // Preload late
-      preload(currentIndex + 1)
-      preload(currentIndex - 1)
+      preload(group.currentIndex + 1)
+      preload(group.currentIndex - 1)
 
       if (callback) {
         callback.call(this)
@@ -683,7 +767,8 @@
       lastFocus.focus()
 
       // Don't forget to cleanup our current element
-      var container = sliderElements[currentIndex].querySelector('.tobi__slider__slide__content')
+      let group = getGroupObject()
+      var container = group.sliderElements[group.currentIndex].querySelector('.tobi__slider__slide__content')
       var type = container.getAttribute('data-type')
       supportedElements[type].onLeave(container)
       supportedElements[type].onCleanup(container)
@@ -691,7 +776,15 @@
       lightbox.setAttribute('aria-hidden', 'true')
 
       // Reset current index
-      currentIndex = 0
+      group.currentIndex = 0
+
+      if (addElements) {
+        addElements = false
+        for (let i = 0; i < tmpElements.length; i += 1) {
+          let el = tmpElements[i]
+          add(el)
+        }
+      }
 
       if (callback) {
         callback.call(this)
@@ -704,11 +797,13 @@
      * @param {number} index - Index to preload
      */
     var preload = function preload (index) {
-      if (sliderElements[index] === undefined) {
+      let group = getGroupObject()
+
+      if (group.sliderElements[index] === undefined) {
         return
       }
 
-      var container = sliderElements[index].querySelector('.tobi__slider__slide__content')
+      var container = group.sliderElements[index].querySelector('.tobi__slider__slide__content')
       var type = container.getAttribute('data-type')
 
       supportedElements[type].onPreload(container)
@@ -721,11 +816,13 @@
      * @param {number} index - Index to load
      */
     var load = function load (index) {
-      if (sliderElements[index] === undefined) {
+      let group = getGroupObject()
+
+      if (group.sliderElements[index] === undefined) {
         return
       }
 
-      var container = sliderElements[index].querySelector('.tobi__slider__slide__content')
+      var container = group.sliderElements[index].querySelector('.tobi__slider__slide__content')
       var type = container.getAttribute('data-type')
 
       supportedElements[type].onLoad(container)
@@ -737,12 +834,14 @@
      * @param {function} callback - Optional callback function
      */
     var prev = function prev (callback) {
-      if (currentIndex > 0) {
-        leave(currentIndex)
-        load(--currentIndex)
+      let group = getGroupObject()
+
+      if (group.currentIndex > 0) {
+        leave(group.currentIndex)
+        load(--group.currentIndex)
         updateLightbox('left')
-        cleanup(currentIndex + 1)
-        preload(currentIndex - 1)
+        cleanup(group.currentIndex + 1)
+        preload(group.currentIndex - 1)
 
         if (callback) {
           callback.call(this)
@@ -756,12 +855,14 @@
      * @param {function} callback - Optional callback function
      */
     var next = function next (callback) {
-      if (currentIndex < elementsLength - 1) {
-        leave(currentIndex)
-        load(++currentIndex)
+      let group = getGroupObject()
+
+      if (group.currentIndex < group.elementsLength - 1) {
+        leave(group.currentIndex)
+        load(++group.currentIndex)
         updateLightbox('right')
-        cleanup(currentIndex - 1)
-        preload(currentIndex + 1)
+        cleanup(group.currentIndex - 1)
+        preload(group.currentIndex + 1)
 
         if (callback) {
           callback.call(this)
@@ -776,11 +877,13 @@
      * @param {number} index - Index to leave
      */
     var leave = function leave (index) {
-      if (sliderElements[index] === undefined) {
+      let group = getGroupObject()
+
+      if (group.sliderElements[index] === undefined) {
         return
       }
 
-      var container = sliderElements[index].querySelector('.tobi__slider__slide__content')
+      var container = group.sliderElements[index].querySelector('.tobi__slider__slide__content')
       var type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
@@ -793,11 +896,13 @@
      * @param {number} index - Index to cleanup
      */
     var cleanup = function cleanup (index) {
-      if (sliderElements[index] === undefined) {
+      let group = getGroupObject()
+
+      if (group.sliderElements[index] === undefined) {
         return
       }
 
-      var container = sliderElements[index].querySelector('.tobi__slider__slide__content')
+      var container = group.sliderElements[index].querySelector('.tobi__slider__slide__content')
       var type = container.getAttribute('data-type')
 
       supportedElements[type].onCleanup(container)
@@ -808,9 +913,10 @@
      *
      */
     var updateOffset = function updateOffset () {
-      offset = -currentIndex * window.innerWidth
+      let group = getGroupObject()
+      offset = -group.currentIndex * window.innerWidth
 
-      slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
+      group.slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
       offsetTmp = offset
     }
 
@@ -819,7 +925,8 @@
      *
      */
     var updateCounter = function updateCounter () {
-      counter.textContent = (currentIndex + 1) + '/' + elementsLength
+      let group = getGroupObject()
+      counter.textContent = (group.currentIndex + 1) + '/' + group.elementsLength
     }
 
     /**
@@ -828,14 +935,15 @@
      * @param {string} dir - Current slide direction
      */
     var updateFocus = function updateFocus (dir) {
-      var focusableEls = null
+      var focusableEls = null,
+        group = getGroupObject()
 
       if (config.nav) {
         // Display the next and previous buttons
         prevButton.disabled = false
         nextButton.disabled = false
 
-        if (elementsLength === 1) {
+        if (group.elementsLength === 1) {
           // Hide the next and previous buttons if there is only one slide
           prevButton.disabled = true
           nextButton.disabled = true
@@ -843,10 +951,10 @@
           if (config.close) {
             closeButton.focus()
           }
-        } else if (currentIndex === 0) {
+        } else if (group.currentIndex === 0) {
           // Hide the previous button when the first slide is displayed
           prevButton.disabled = true
-        } else if (currentIndex === elementsLength - 1) {
+        } else if (group.currentIndex === group.elementsLength - 1) {
           // Hide the next button when the last slide is displayed
           nextButton.disabled = true
         }
@@ -891,14 +999,16 @@
      *
      */
     var updateAfterDrag = function updateAfterDrag () {
+      let group = getGroupObject()
+
       var movementX = drag.endX - drag.startX,
         movementY = drag.endY - drag.startY,
         movementXDistance = Math.abs(movementX),
         movementYDistance = Math.abs(movementY)
 
-      if (movementX > 0 && movementXDistance > config.threshold && currentIndex > 0) {
+      if (movementX > 0 && movementXDistance > config.threshold && group.currentIndex > 0) {
         prev()
-      } else if (movementX < 0 && movementXDistance > config.threshold && currentIndex !== elementsLength - 1) {
+      } else if (movementX < 0 && movementXDistance > config.threshold && group.currentIndex !== group.elementsLength - 1) {
         next()
       } else if (movementY < 0 && movementYDistance > config.threshold && config.swipeClose) {
         close()
@@ -926,9 +1036,11 @@
     /**
      * Keydown event handler
      *
+     * @TODO: Remove the deprecated event.keyCode when Edge and IE support event.code
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
      */
     var keydownHandler = function keydownHandler (event) {
-      if (event.keyCode === 9) {
+      if (event.keyCode === 9 || event.code === 'Tab') {
         // `TAB` Key: Navigate to the next/previous focusable element
         if (event.shiftKey) {
           // Step backwards in the tab-order
@@ -943,15 +1055,15 @@
             event.preventDefault()
           }
         }
-      } else if (event.keyCode === 27) {
+      } else if (event.keyCode === 27 || event.code === 'Escape') {
         // `ESC` Key: Close the lightbox
         event.preventDefault()
         close()
-      } else if (event.keyCode === 37) {
+      } else if (event.keyCode === 37 || event.code === 'ArrowLeft') {
         // `PREV` Key: Navigate to the previous slide
         event.preventDefault()
         prev()
-      } else if (event.keyCode === 39) {
+      } else if (event.keyCode === 39 || event.code === 'ArrowRight') {
         // `NEXT` Key: Navigate to the next slide
         event.preventDefault()
         next()
@@ -975,7 +1087,8 @@
       drag.startX = event.touches[0].pageX
       drag.startY = event.touches[0].pageY
 
-      slider.classList.add('tobi__slider--is-dragging')
+      let group = getGroupObject()
+      group.slider.classList.add('tobi__slider--is-dragging')
     }
 
     /**
@@ -1004,7 +1117,8 @@
 
       pointerDown = false
 
-      slider.classList.remove('tobi__slider--is-dragging')
+      let group = getGroupObject()
+      group.slider.classList.remove('tobi__slider--is-dragging')
 
       if (drag.endX) {
         isDraggingX = false
@@ -1034,7 +1148,8 @@
       drag.startX = event.pageX
       drag.startY = event.pageY
 
-      slider.classList.add('tobi__slider--is-dragging')
+      let group = getGroupObject()
+      group.slider.classList.add('tobi__slider--is-dragging')
     }
 
     /**
@@ -1061,7 +1176,8 @@
 
       pointerDown = false
 
-      slider.classList.remove('tobi__slider--is-dragging')
+      let group = getGroupObject()
+      group.slider.classList.remove('tobi__slider--is-dragging')
 
       if (drag.endX) {
         isDraggingX = false
@@ -1078,15 +1194,17 @@
      *
      */
     var doSwipe = function doSwipe () {
+      let group = getGroupObject()
+
       if (Math.abs(drag.startX - drag.endX) > 0 && !isDraggingY && config.swipeClose) {
         // Horizontal swipe
-        slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
+        group.slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
 
         isDraggingX = true
         isDraggingY = false
       } else if (Math.abs(drag.startY - drag.endY) > 0 && !isDraggingX) {
         // Vertical swipe
-        slider.style[transformProperty] = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
+        group.slider.style[transformProperty] = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
 
         isDraggingX = false
         isDraggingY = true
@@ -1175,12 +1293,14 @@
      *
      */
     var recheckConfig = function recheckConfig () {
-      if (config.draggable && elementsLength > 1 && !slider.classList.contains('tobi__slider--is-draggable')) {
-        slider.classList.add('tobi__slider--is-draggable')
+      let group = getGroupObject()
+
+      if (config.draggable && group.elementsLength > 1 && !group.slider.classList.contains('tobi__slider--is-draggable')) {
+        group.slider.classList.add('tobi__slider--is-draggable')
       }
 
       // Hide buttons if necessary
-      if (!config.nav || elementsLength === 1 || (config.nav === 'auto' && isTouchDevice())) {
+      if (!config.nav || group.elementsLength === 1 || (config.nav === 'auto' && isTouchDevice())) {
         prevButton.setAttribute('aria-hidden', 'true')
         nextButton.setAttribute('aria-hidden', 'true')
       } else {
@@ -1189,10 +1309,20 @@
       }
 
       // Hide counter if necessary
-      if (!config.counter || elementsLength === 1) {
+      if (!config.counter || group.elementsLength === 1) {
         counter.setAttribute('aria-hidden', 'true')
       } else {
         counter.setAttribute('aria-hidden', 'false')
+      }
+    }
+
+    /**
+     * Hide all unused sliders
+     */
+    var updateSlider = function updateSlider () {
+      for (let name in groups) {
+        if (!groups.hasOwnProperty(name)) continue
+        groups[name].slider.style.display = currentGroup === name ? null : 'none'
       }
     }
 
@@ -1202,6 +1332,7 @@
      * @param {string} dir - Current slide direction
      */
     var updateLightbox = function updateLightbox (dir) {
+      updateSlider()
       updateOffset()
       updateCounter()
       updateFocus(dir)
@@ -1213,13 +1344,15 @@
      * @param {function} callback - Optional callback to call after reset
      */
     var reset = function reset (callback) {
-      if (slider) {
-        while (slider.firstChild) {
-          slider.removeChild(slider.firstChild)
+      let group = getGroupObject()
+
+      if (group.slider) {
+        while (group.slider.firstChild) {
+          group.slider.removeChild(group.slider.firstChild)
         }
       }
 
-      gallery.length = sliderElements.length = elementsLength = figcaptionId = x = 0
+      group.gallery.length = group.sliderElements.length = group.elementsLength = figcaptionId = group.x = 0
 
       if (callback) {
         callback.call(this)
@@ -1247,7 +1380,8 @@
      *
      */
     var isIgnoreElement = function isIgnoreElement (el) {
-      return ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(el.nodeName) !== -1 || el === prevButton || el === nextButton || el === closeButton || elementsLength === 1
+      let group = getGroupObject()
+      return ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(el.nodeName) !== -1 || el === prevButton || el === nextButton || el === closeButton || group.elementsLength === 1
     }
 
     /**
@@ -1255,7 +1389,39 @@
      *
      */
     var currentSlide = function currentSlide () {
-      return currentIndex
+      let group = getGroupObject()
+      return group.currentIndex
+    }
+
+    /**
+     * Select a specific group
+     *
+     * @param {string} name
+     */
+    var selectGroup = function selectGroup (name) {
+      if (!config.grouping) {
+        currentGroup = 'default'
+        return
+      }
+
+      if (!groups.hasOwnProperty(name)) {
+        throw new Error('Ups, I don\'t have a group called "' + name + '".')
+      }
+
+      currentGroup = name
+    }
+
+    /**
+     * Function with a warning for the user when grouping is disabled
+     *
+     * @see selectGroup
+     *
+     * @param {string} name
+     */
+    var userSelectGroup = function userSelectGroup (name) {
+      if (!config.grouping) console.warn('Ups, grouping is disabled.')
+
+      selectGroup(name)
     }
 
     init(userOptions)
@@ -1268,7 +1434,9 @@
       add: checkDependencies,
       reset: reset,
       isOpen: isOpen,
-      currentSlide: currentSlide
+      currentSlide: currentSlide,
+      selectGroup: userSelectGroup,
+      getGroupName: getGroupName
     }
   }
 
