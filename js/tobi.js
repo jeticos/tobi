@@ -48,8 +48,6 @@
       offset = null,
       offsetTmp = null,
       resizeTicking = false,
-      touchmoveTicking = false,
-      mousemoveTicking = false,
       isYouTubeDependencieLoaded = false,
       waitingEls = [],
       player = [],
