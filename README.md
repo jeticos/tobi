@@ -193,20 +193,20 @@ In any case, the attribute `data-type` with the value `youtube` must be added.
 
 ## Grouping
 
-If you have a group of related types that you would like to combine into a set, add the data-lightbox attribute:
+If you have a group of related types that you would like to combine into a set, add the `data-group` attribute:
 
 ```html
-<a href="path/to/image_1.jpg" class="lightbox" data-lightbox="vacation">
+<a href="path/to/image_1.jpg" class="lightbox" data-group="vacation">
   <img src="path/to/thumbnail_1.jpg" alt="I am a caption">
 </a>
 
-<a href="path/to/image_2.jpg" class="lightbox" data-lightbox="vacation">
+<a href="path/to/image_2.jpg" class="lightbox" data-group="vacation">
   <img src="path/to/thumbnail_2.jpg" alt="I am a caption">
 </a>
 
 // ...
 
-<a href="path/to/image_4.jpg" class="lightbox" data-lightbox="birthday">
+<a href="path/to/image_4.jpg" class="lightbox" data-group="birthday">
   <img src="path/to/thumbnail_4.jpg" alt="I am a caption">
 </a>
 

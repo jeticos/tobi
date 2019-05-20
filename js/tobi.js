@@ -104,7 +104,7 @@
 
         // Not documented
         grouping: true,
-        groupAttribute: 'data-lightbox'
+        groupAttribute: 'data-group'
       }
 
       if (userOptions) {
