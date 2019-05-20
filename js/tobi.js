@@ -100,11 +100,7 @@
         rtl: false, // TODO
         loop: false, // TODO
         autoplayVideo: false,
-        theme: 'dark',
-
-        // Not documented
-        grouping: true,
-        groupAttribute: 'data-group'
+        theme: 'dark'
       }
 
       if (userOptions) {
@@ -468,10 +464,7 @@
      * @return {string}
      */
     var getGroupName = function getGroupName (el) {
-      if (!config.grouping) return 'default'
-
-      let attr = config.groupAttribute
-      return el.hasAttribute(attr) ? (el.getAttribute(attr).length > 0 ? el.getAttribute(attr) : 'default') : 'default'
+      return el.hasAttribute('data-group') ? (el.getAttribute('data-group').length > 0 ? el.getAttribute('data-group') : 'default') : 'default'
     }
 
     /**
@@ -1381,6 +1374,7 @@
      */
     var isIgnoreElement = function isIgnoreElement (el) {
       let group = getGroupObject()
+
       return ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(el.nodeName) !== -1 || el === prevButton || el === nextButton || el === closeButton || group.elementsLength === 1
     }
 
@@ -1390,6 +1384,7 @@
      */
     var currentSlide = function currentSlide () {
       let group = getGroupObject()
+
       return group.currentIndex
     }
 
@@ -1399,12 +1394,13 @@
      * @param {string} name
      */
     var selectGroup = function selectGroup (name) {
-      if (!config.grouping) {
+      if (!name) {
         currentGroup = 'default'
-        return
       }
 
-      if (!groups.hasOwnProperty(name)) {
+      if (name && !groups.hasOwnProperty(name)) {
+        currentGroup = 'default'
+
         throw new Error('Ups, I don\'t have a group called "' + name + '".')
       }
 
@@ -1419,8 +1415,6 @@
      * @param {string} name
      */
     var userSelectGroup = function userSelectGroup (name) {
-      if (!config.grouping) console.warn('Ups, grouping is disabled.')
-
       selectGroup(name)
     }
 
