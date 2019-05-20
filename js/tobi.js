@@ -101,7 +101,7 @@
         loop: false, // TODO
         autoplayVideo: false,
         theme: 'dark',
-        grouping: false,
+        grouping: true,
         groupAttribute: 'tobi-group'
       }
 
