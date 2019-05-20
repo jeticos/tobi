@@ -25,6 +25,7 @@ An accessible, simple and light-weight open source lightbox script with no depen
   - [Inline HTML](#inline-html)
   - [Iframe](#iframe)
   - [YouTube](#youtube)
+- [Grouping](#grouping)
 - [Options](#options)
 - [API](#api)
 - [Browser support](#browser-support)
@@ -190,6 +191,28 @@ In any case, the attribute `data-type` with the value `youtube` must be added.
 
 `data-height` set the height and `data-width` the width of the player. I recommend to use a external library for responsive iframes.
 
+## Grouping
+
+If you have a group of related types that you would like to combine into a set, add the data-lightbox attribute:
+
+```html
+<a href="path/to/image_1.jpg" class="lightbox" data-lightbox="vacation">
+  <img src="path/to/thumbnail_1.jpg" alt="I am a caption">
+</a>
+
+<a href="path/to/image_2.jpg" class="lightbox" data-lightbox="vacation">
+  <img src="path/to/thumbnail_2.jpg" alt="I am a caption">
+</a>
+
+// ...
+
+<a href="path/to/image_4.jpg" class="lightbox" data-lightbox="birthday">
+  <img src="path/to/thumbnail_4.jpg" alt="I am a caption">
+</a>
+
+// ...
+```
+
 ## Options
 
 You can pass an object with custom options as an argument.
@@ -252,7 +275,6 @@ Tobi has been tested in the following browsers (all the latest versions):
 
 ## To do
 
-- [ ] Possibility to group
 - [ ] Support for `srcset` and `picture`
 
 ## Contributing
