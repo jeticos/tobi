@@ -101,8 +101,10 @@
         loop: false, // TODO
         autoplayVideo: false,
         theme: 'dark',
+
+        // Not documented
         grouping: true,
-        groupAttribute: 'tobi-group'
+        groupAttribute: 'data-lightbox'
       }
 
       if (userOptions) {
@@ -468,7 +470,7 @@
     var getGroupName = function getGroupName (el) {
       if (!config.grouping) return 'default'
 
-      let attr = 'data-' + config.groupAttribute
+      let attr = config.groupAttribute
       return el.hasAttribute(attr) ? (el.getAttribute(attr).length > 0 ? el.getAttribute(attr) : 'default') : 'default'
     }
 
