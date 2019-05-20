@@ -61,9 +61,8 @@
         x: 0
       },
       groups = {},
-      currentGroup = 'default',
-      addElements = false,
-      tmpElements = []
+      currentGroup = null,
+      openGroup = null
 
     /**
      * Merge default options with user options
@@ -504,10 +503,10 @@
      * @param {function} callback - Optional callback to call after add
      */
     var add = function add (el, callback) {
-      if (isOpen() && getGroupName(el) !== currentGroup) {
-        addElements = true
-        tmpElements.push(el)
-        return
+      let isConflict = false
+
+      if (isOpen() && getGroupName(el) !== openGroup) {
+        isConflict = true
       }
 
       createGroupObject(el)
@@ -532,7 +531,8 @@
         // Bind click event handler
         el.addEventListener('click', function (event) {
           event.preventDefault()
-          selectGroup(getGroupName(this))
+          currentGroup = getGroupName(el)
+          openGroup = getGroupName(el)
 
           open(group.gallery.indexOf(this))
         })
@@ -540,7 +540,7 @@
         // Create the slide
         createLightboxSlide(el)
 
-        if (isOpen()) {
+        if (isOpen() && !isConflict) {
           recheckConfig()
           updateLightbox()
         }
@@ -771,13 +771,7 @@
       // Reset current index
       group.currentIndex = 0
 
-      if (addElements) {
-        addElements = false
-        for (let i = 0; i < tmpElements.length; i += 1) {
-          let el = tmpElements[i]
-          add(el)
-        }
-      }
+      openGroup = null
 
       if (callback) {
         callback.call(this)
@@ -1394,28 +1388,19 @@
      * @param {string} name
      */
     var selectGroup = function selectGroup (name) {
+      if (isOpen()) {
+        throw new Error('Ups, I can\'t do this. Tobi is open.')
+      }
+
       if (!name) {
-        currentGroup = 'default'
+        return
       }
 
       if (name && !groups.hasOwnProperty(name)) {
-        currentGroup = 'default'
-
         throw new Error('Ups, I don\'t have a group called "' + name + '".')
       }
 
       currentGroup = name
-    }
-
-    /**
-     * Function with a warning for the user when grouping is disabled
-     *
-     * @see selectGroup
-     *
-     * @param {string} name
-     */
-    var userSelectGroup = function userSelectGroup (name) {
-      selectGroup(name)
     }
 
     init(userOptions)
@@ -1429,8 +1414,8 @@
       reset: reset,
       isOpen: isOpen,
       currentSlide: currentSlide,
-      selectGroup: userSelectGroup,
-      getGroupName: getGroupName
+      selectGroup: selectGroup,
+      currentGroup: getGroupName
     }
   }
 
