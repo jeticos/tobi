@@ -1319,7 +1319,7 @@
      *
      */
     var currentGroup = function currentGroup () {
-      return activeGroup
+      return activeGroup !== null ? activeGroup : newGroup
     }
 
     /**
