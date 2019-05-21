@@ -857,9 +857,9 @@
      *
      */
     var updateOffset = function updateOffset () {
-      offset = -groups[activeGroup].currentIndex * window.innerWidth
+      offset = -groups[newGroup].currentIndex * window.innerWidth
 
-      groups[activeGroup].slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
+      groups[newGroup].slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
       offsetTmp = offset
     }
 
