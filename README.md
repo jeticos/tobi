@@ -101,6 +101,8 @@ var tobi = new Tobi()
 
 ### Image
 
+[Play on CodePen](https://codepen.io/rqrauhvmra/pen/ZRZdwG)
+
 The standard way of using Tobi is a linked thumbnail image with the class name `lightbox` to a larger image:
 
 ```html
@@ -117,9 +119,9 @@ Instead of a thumbnail, you can also refer to a larger image with a textlink:
 </a>
 ```
 
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/ZRZdwG)
-
 ### Inline HTML
+
+[Play on CodePen](https://codepen.io/rqrauhvmra/pen/BOLxqj)
 
 For inline HTML, create an element with a unique ID:
 
@@ -148,6 +150,8 @@ or a button with the class name `lightbox` and a `data-target` attribute that ma
 In any case, the attribute `data-type` with the value `html` must be added.
 
 ### Iframe
+
+[Play on CodePen](https://codepen.io/rqrauhvmra/pen/GXJwar)
 
 For an iframe, create a link with the class name `lightbox`:
 
@@ -193,6 +197,8 @@ In any case, the attribute `data-type` with the value `youtube` must be added.
 
 ## Grouping
 
+[Play on CodePen](https://codepen.io/rqrauhvmra/pen/PvKVxp)
+
 If you have a group of related types that you would like to combine into a set, add the `data-group` attribute:
 
 ```html
@@ -215,6 +221,8 @@ If you have a group of related types that you would like to combine into a set, 
 
 ## Options
 
+[Play on CodePen](https://codepen.io/rqrauhvmra/pen/MBYEog)
+
 You can pass an object with custom options as an argument.
 
 ```js
@@ -222,8 +230,6 @@ var tobi = new Tobi({
   captions: false
 })
 ```
-
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/MBYEog)
 
 The following options are available:
 
