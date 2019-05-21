@@ -427,7 +427,7 @@
      *
      * @param {HTMLElement} el - Element to add
      */
-    var checkDependencies = function checkDependencies (el) {
+    var checkDependencies = function checkDependencies (el, callback) {
       // Check if there is a YouTube video and if the YouTube iframe-API is ready
       if (document.querySelector('[data-type="youtube"]') !== null && !isYouTubeDependencieLoaded) {
         if (document.getElementById('iframe_api') === null) {
@@ -446,13 +446,13 @@
 
         window.onYouTubePlayerAPIReady = function () {
           Array.prototype.forEach.call(waitingEls, function (waitingEl) {
-            add(waitingEl)
+            add(waitingEl, callback)
           })
 
           isYouTubeDependencieLoaded = true
         }
       } else {
-        add(el)
+        add(el, callback)
       }
     }
 
