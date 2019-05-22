@@ -218,6 +218,7 @@
   transition-property: opacity, transform;
   transition-timing-function: $transitionTimingFunction;
   will-change: opacity, transform;
+  z-index: 1;
 
   @media screen and (prefers-reduced-motion: reduce) {
     transition: none;
@@ -295,6 +296,7 @@
   line-height: 1;
   position: absolute;
   top: em(40);
+  z-index: 1;
 
 
   &[aria-hidden="true"] {
