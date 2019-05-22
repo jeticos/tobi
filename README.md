@@ -171,6 +171,8 @@ or a button with the class name `lightbox` and a `data-target` attribute:
 
 ### YouTube
 
+[Play on CodePen](https://codepen.io/rqrauhvmra/pen/rgpjXE)
+
 For an YouTube video, create a link with the class name `lightbox` and a `data-id` attribute with the YouTube video ID:
 
 ```html
