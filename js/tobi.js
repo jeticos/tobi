@@ -2,7 +2,7 @@
  * Tobi
  *
  * @author rqrauhvmra
- * @version 1.8.2
+ * @version 1.9.0
  * @url https://github.com/rqrauhvmra/Tobi
  *
  * MIT License
