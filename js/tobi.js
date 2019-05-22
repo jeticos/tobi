@@ -875,44 +875,41 @@
       var focusableEls = null
 
       if (config.nav) {
-        // Display the next and previous buttons
         prevButton.disabled = false
         nextButton.disabled = false
 
+        if (dir === 'left') {
+          prevButton.focus()
+        } else {
+          nextButton.focus()
+        }
+
+        // If there is only one slide
         if (groups[activeGroup].elementsLength === 1) {
-          // Hide the next and previous buttons if there is only one slide
           prevButton.disabled = true
           nextButton.disabled = true
 
           if (config.close) {
             closeButton.focus()
           }
-        } else if (groups[activeGroup].currentIndex === 0) {
-          // Hide the previous button when the first slide is displayed
-          prevButton.disabled = true
-        } else if (groups[activeGroup].currentIndex === groups[activeGroup].elementsLength - 1) {
-          // Hide the next button when the last slide is displayed
-          nextButton.disabled = true
-        }
+        } else {
+          // If the first slide is displayed
+          if (groups[activeGroup].currentIndex === 0) {
+            prevButton.disabled = true
+            nextButton.focus()
+          }
 
-        if (!dir && !nextButton.disabled) {
-          nextButton.focus()
-        } else if (!dir && nextButton.disabled && !prevButton.disabled) {
-          prevButton.focus()
-        } else if (!nextButton.disabled && dir === 'right') {
-          nextButton.focus()
-        } else if (nextButton.disabled && dir === 'right' && !prevButton.disabled) {
-          prevButton.focus()
-        } else if (!prevButton.disabled && dir === 'left') {
-          prevButton.focus()
-        } else if (prevButton.disabled && dir === 'left' && !nextButton.disabled) {
-          nextButton.focus()
+          // If the last slide is displayed
+          if (groups[activeGroup].currentIndex === groups[activeGroup].elementsLength - 1) {
+            nextButton.disabled = true
+            prevButton.focus()
+          }
         }
       } else if (config.close) {
         closeButton.focus()
       }
 
-      focusableEls = lightbox.querySelectorAll('button:not(:disabled)')
+      focusableEls = lightbox.querySelectorAll('.tobi > button:not(:disabled)')
       firstFocusableEl = focusableEls[0]
       lastFocusableEl = focusableEls.length === 1 ? focusableEls[0] : focusableEls[focusableEls.length - 1]
     }
