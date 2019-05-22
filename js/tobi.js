@@ -37,7 +37,6 @@
       nextButton = null,
       closeButton = null,
       counter = null,
-      sliderContainer = null,
       drag = {},
       isDraggingX = false,
       isDraggingY = false,
@@ -98,8 +97,7 @@
         threshold: 100,
         rtl: false, // TODO
         loop: false, // TODO
-        autoplayVideo: false,
-        theme: 'dark'
+        autoplayVideo: false
       }
 
       if (userOptions) {
@@ -541,12 +539,7 @@
       lightbox = document.createElement('div')
       lightbox.setAttribute('role', 'dialog')
       lightbox.setAttribute('aria-hidden', 'true')
-      lightbox.className = 'tobi tobi--theme-' + config.theme
-
-      // Create slider container where we can store our sliders
-      sliderContainer = document.createElement('div')
-      sliderContainer.className = 'tobi__slider--container'
-      lightbox.appendChild(sliderContainer)
+      lightbox.className = 'tobi'
 
       // Create previous button
       prevButton = document.createElement('button')
@@ -599,7 +592,7 @@
     var createLightboxSlider = function createLightboxSlider () {
       groups[newGroup].slider = document.createElement('div')
       groups[newGroup].slider.className = 'tobi__slider'
-      sliderContainer.appendChild(groups[newGroup].slider)
+      lightbox.appendChild(groups[newGroup].slider)
     }
 
     /**
@@ -857,9 +850,11 @@
      *
      */
     var updateOffset = function updateOffset () {
-      offset = -groups[newGroup].currentIndex * window.innerWidth
+      activeGroup = activeGroup !== null ? activeGroup : newGroup
 
-      groups[newGroup].slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
+      offset = -groups[activeGroup].currentIndex * window.innerWidth
+
+      groups[activeGroup].slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
       offsetTmp = offset
     }
 
@@ -1253,7 +1248,7 @@
     var updateSlider = function updateSlider () {
       for (let name in groups) {
         if (!groups.hasOwnProperty(name)) continue
-        groups[name].slider.style.display = activeGroup === name ? null : 'none'
+        groups[name].slider.style.display = activeGroup === name ? 'block' : 'none'
       }
     }
 
