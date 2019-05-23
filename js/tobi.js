@@ -77,19 +77,19 @@
         captionsSelector: 'img',
         captionAttribute: 'alt',
         nav: 'auto',
-        navText: ['<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><polyline points="14 18 8 12 14 6 14 6"></polyline></svg>', '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><polyline points="10 6 16 12 10 18 10 18"></polyline></svg>'],
-        navLabel: ['Previous', 'Next'],
+        navText: ['<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="14 18 8 12 14 6 14 6"></polyline></svg>', '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="10 6 16 12 10 18 10 18"></polyline></svg>'],
+        navLabel: ['Previous image', 'Next image'],
         close: true,
-        closeText: '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24"><path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path></svg>',
-        closeLabel: 'Close',
+        closeText: '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575"></path></svg>',
+        closeLabel: 'Close lightbox',
         loadingIndicatorLabel: 'Image loading',
         counter: true,
         download: false, // TODO
         downloadText: '', // TODO
-        downloadLabel: 'Download', // TODO
+        downloadLabel: 'Download image', // TODO
         keyboard: true,
         zoom: true,
-        zoomText: '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><polyline points="21 16 21 21 16 21"/><polyline points="8 21 3 21 3 16"/><polyline points="16 3 21 3 21 8"/><polyline points="3 8 3 3 8 3"/></svg>',
+        zoomText: '<svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="21 16 21 21 16 21"/><polyline points="8 21 3 21 3 16"/><polyline points="16 3 21 3 21 8"/><polyline points="3 8 3 3 8 3"/></svg>',
         docClose: true,
         swipeClose: true,
         hideScrollbar: true,
@@ -967,7 +967,7 @@
     /**
      * Keydown event handler
      *
-     * @TODO: Remove the deprecated event.keyCode when Edge and IE support event.code
+     * @TODO: Remove the deprecated event.keyCode when Edge support event.code and we drop f*cking IE
      * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
      */
     var keydownHandler = function keydownHandler (event) {
