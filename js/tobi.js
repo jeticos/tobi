@@ -30,7 +30,6 @@
      */
     let config = {}
     let browserWindow = window
-    let transformProperty = null
     let figcaptionId = 0
     let lightbox = null
     let prevButton = null
@@ -107,15 +106,6 @@
       }
 
       return options
-    }
-
-    /**
-     * Determine if browser supports unprefixed transform property
-     *
-     * @returns {string} - Transform property supported by client
-     */
-    const transformSupport = function transformSupport () {
-      return typeof document.documentElement.style.transform === 'string' ? 'transform' : 'WebkitTransform'
     }
 
     /**
@@ -397,9 +387,6 @@
     const init = function init (userOptions) {
       // Merge user options into defaults
       config = mergeOptions(userOptions)
-
-      // Transform property supported by client
-      transformProperty = transformSupport()
 
       // Check if the lightbox already exists
       if (!lightbox) {
@@ -854,7 +841,7 @@
 
       offset = -groups[activeGroup].currentIndex * window.innerWidth
 
-      groups[activeGroup].slider.style[transformProperty] = 'translate3d(' + offset + 'px, 0, 0)'
+      groups[activeGroup].slider.style.transform = 'translate3d(' + offset + 'px, 0, 0)'
       offsetTmp = offset
     }
 
@@ -1123,13 +1110,13 @@
     const doSwipe = function doSwipe () {
       if (Math.abs(drag.startX - drag.endX) > 0 && !isDraggingY && config.swipeClose) {
         // Horizontal swipe
-        groups[activeGroup].slider.style[transformProperty] = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
+        groups[activeGroup].slider.style.transform = 'translate3d(' + (offsetTmp - Math.round(drag.startX - drag.endX)) + 'px, 0, 0)'
 
         isDraggingX = true
         isDraggingY = false
       } else if (Math.abs(drag.startY - drag.endY) > 0 && !isDraggingX) {
         // Vertical swipe
-        groups[activeGroup].slider.style[transformProperty] = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
+        groups[activeGroup].slider.style.transform = 'translate3d(' + (offsetTmp + 'px, -' + Math.round(drag.startY - drag.endY)) + 'px, 0)'
 
         isDraggingX = false
         isDraggingY = true
