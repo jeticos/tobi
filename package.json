@@ -1,5 +1,5 @@
 {
-  "name": "rqrauhvmra__tobi",
+  "name": "@rqrauhvmra/tobi",
   "version": "1.9.0",
   "description": "An accessible, simple and light-weight open source lightbox script with no dependencies.",
   "main": "js/tobi.js",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rqrauhvmra/Tobi.git"
+    "url": "git://github.com/rqrauhvmra/tobi.git"
   },
   "keywords": [
     "lightbox",
@@ -32,7 +32,7 @@
   "author": "rqrauhvmra",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rqrauhvmra/Tobi/issues"
+    "url": "https://github.com/rqrauhvmra/tobi/issues"
   },
-  "homepage": "https://github.com/rqrauhvmra/Tobi"
+  "homepage": "https://github.com/rqrauhvmra/tobi"
 }

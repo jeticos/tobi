@@ -63,7 +63,7 @@ JavaScript: `js/tobi.min.js` minified, or `js/tobi.js` un-minified
 
 Tobi is also available on npm.
 
-`$ npm install rqrauhvmra__tobi --save`
+`$ npm install @rqrauhvmra/tobi --save`
 
 ## Usage
 
