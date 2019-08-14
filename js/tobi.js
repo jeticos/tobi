@@ -499,13 +499,7 @@
         }
 
         // Bind click event handler
-        el.addEventListener('click', function (event) {
-          event.preventDefault()
-
-          activeGroup = getGroupName(el)
-
-          open(groups[activeGroup].gallery.indexOf(this))
-        })
+        el.addEventListener('click', click)
 
         // Create the slide
         createLightboxSlide(el)
@@ -520,6 +514,52 @@
         }
       } else {
         throw new Error('Ups, element already added to the lightbox.')
+      }
+    }
+
+    /**
+     * Remove element
+     *
+     * @param {HTMLElement} el - Element to remove
+     * @param {function} callback - Optional callback to call after remove
+     */
+    const remove = function add (el, callback) {
+      let groupName = getGroupName(el)
+
+      // Check if element exists
+      if (groups[groupName].gallery.indexOf(el) === -1) {
+        // TODO
+      } else {
+        let slideIndex = groups[groupName].gallery.indexOf(el)
+        let slideEl = groups[groupName].sliderElements[slideIndex]
+
+        // TODO If the element to be removed is the currently visible slide
+
+        //groups[groupName].gallery.splice(groups[groupName].gallery.indexOf(el))
+        groups[groupName].elementsLength--
+
+        // Remove zoom icon if necessary
+        if (config.zoom && el.querySelector('.tobi-zoom__icon')) {
+          let zoomIcon = el.querySelector('.tobi-zoom__icon')
+
+          zoomIcon.parentNode.classList.remove('tobi-zoom')
+          zoomIcon.parentNode.removeChild(zoomIcon)
+        }
+
+        // Unbind click event handler
+        el.removeEventListener('click', click)
+
+        // TODO Remove Slide
+        slideEl.parentNode.removeChild(slideEl)
+
+        if (isOpen() && groupName === activeGroup) {
+          recheckConfig()
+          updateLightbox()
+        }
+
+        if (callback) {
+          callback.call(this)
+        }
       }
     }
 
@@ -945,6 +985,18 @@
      * Click event handler
      *
      */
+    const click = function click (event) {
+      event.preventDefault()
+
+      activeGroup = getGroupName(this)
+
+      open(groups[activeGroup].gallery.indexOf(this))
+    }
+
+    /**
+     * Click event handler
+     *
+     */
     const clickHandler = function clickHandler (event) {
       if (event.target === prevButton) {
         prev()
@@ -1264,11 +1316,18 @@
         close()
       }
 
-      Object.keys(groups).forEach(function (group) {
-        while (groups[group].slider.firstChild) {
-          groups[group].slider.removeChild(groups[group].slider.firstChild)
-        }
+      // TODO Clean up
+      const entries = Object.entries(groups)
+
+      Array.prototype.forEach.call(entries, function (entrie) {
+        let els = entrie[1].gallery
+
+        Array.prototype.forEach.call(els, function (el) {
+          remove(el)
+        })
       })
+
+      lightbox.parentNode.removeChild(lightbox)
 
       groups = {}
       newGroup = activeGroup = null
@@ -1350,6 +1409,7 @@
       next: next,
       close: close,
       add: checkDependencies,
+      remove: remove,
       destroy: destroy,
       isOpen: isOpen,
       currentSlide: currentSlide,
