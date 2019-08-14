@@ -347,9 +347,9 @@
             width: el.getAttribute('data-width') || '640',
             videoId: el.getAttribute('data-id'),
             playerVars: {
-              'controls': el.getAttribute('data-controls') || 1,
-              'rel': 0,
-              'playsinline': 1
+              controls: el.getAttribute('data-controls') || 1,
+              rel: 0,
+              playsinline: 1
             }
           })
 
@@ -476,7 +476,7 @@
     const add = function add (el, callback) {
       newGroup = getGroupName(el)
 
-      if (!groups.hasOwnProperty(newGroup)) {
+      if (!Object.prototype.hasOwnProperty.call(groups, newGroup)) {
         groups[newGroup] = copyObject(groupAtts)
 
         createLightboxSlider()
@@ -595,7 +595,7 @@
     const createLightboxSlide = function createLightboxSlide (el) {
       // Detect type
       for (let index in supportedElements) {
-        if (supportedElements.hasOwnProperty(index)) {
+        if (Object.prototype.hasOwnProperty.call(supportedElements, index)) {
           if (supportedElements[index].checkSupport(el)) {
             // Create slide elements
             let sliderElement = document.createElement('div')
@@ -1237,7 +1237,7 @@
      */
     const updateSlider = function updateSlider () {
       for (let name in groups) {
-        if (!groups.hasOwnProperty(name)) continue
+        if (!Object.prototype.hasOwnProperty.call(groups, name)) continue
         groups[name].slider.style.display = activeGroup === name ? 'block' : 'none'
       }
     }
@@ -1263,6 +1263,16 @@
       if (isOpen()) {
         close()
       }
+
+      Object.keys(groups).forEach(function (group) {
+        while (groups[group].slider.firstChild) {
+          groups[group].slider.removeChild(groups[group].slider.firstChild)
+        }
+      })
+
+      groups = {}
+      newGroup = activeGroup = null
+      figcaptionId = 0
 
       // TODO
 
@@ -1325,7 +1335,7 @@
         return
       }
 
-      if (name && !groups.hasOwnProperty(name)) {
+      if (name && !Object.prototype.hasOwnProperty.call(groups, name)) {
         throw new Error('Ups, I don\'t have a group called "' + name + '".')
       }
 
