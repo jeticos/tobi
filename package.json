@@ -9,9 +9,9 @@
     "autoprefixer": "*"
   },
   "browserslist": [
-    "> 1%",
     "last 2 versions",
-    "Firefox ESR"
+    "not <= 1%",
+    "not IE 10"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
