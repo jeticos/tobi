@@ -172,6 +172,10 @@
     overflow-y: auto;
     overscroll-behavior: contain;
 
+    /* Fix iframe scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 0, 0);
+
 
     & iframe {
       display: block !important;
