@@ -1260,6 +1260,10 @@
      * @param {function} callback - Optional callback to call after destroy
      */
     const destroy = function destroy (callback) {
+      if (isOpen()) {
+        close()
+      }
+
       // TODO
 
       if (callback) {
