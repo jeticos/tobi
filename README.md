@@ -167,9 +167,11 @@ or a button with the class name `lightbox` and a `data-target` attribute:
 </button>
 ```
 
+In any case, the attribute `data-type` with the value `iframe` must be added.
+
 #### Optional attributes
 
-`data-height` set the height and `data-width` the width of the iframe.
+- `data-height` set the height and `data-width` the width of the iframe.
 
 ### YouTube
 
@@ -195,9 +197,8 @@ In any case, the attribute `data-type` with the value `youtube` must be added.
 
 #### Optional attributes
 
-`data-controls` indicates whether the video player controls are displayed: `0` do not display and `1` display controls in the player.
-
-`data-height` set the height and `data-width` the width of the player. I recommend to use a external library for responsive iframes.
+- `data-controls` indicates whether the video player controls are displayed: `0` do not display and `1` display controls in the player.
+- `data-height` set the height and `data-width` the width of the player. I recommend to use a external library for responsive iframes.
 
 ## Grouping
 
