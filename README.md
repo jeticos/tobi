@@ -92,7 +92,7 @@ You can install Tobi by linking the `.css` and `.js` files to your html file. Th
 Initialize the script by running:
 
 ```js
-var tobi = new Tobi()
+const tobi = new Tobi()
 ```
 
 ## Media types
@@ -230,7 +230,7 @@ If you have a group of related types that you would like to combine into a set, 
 You can pass an object with custom options as an argument.
 
 ```js
-var tobi = new Tobi({
+const tobi = new Tobi({
   captions: false
 })
 ```
