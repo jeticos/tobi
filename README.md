@@ -167,6 +167,10 @@ or a button with the class name `lightbox` and a `data-target` attribute:
 </button>
 ```
 
+#### Optional attributes
+
+`data-height` set the height and `data-width` the width of the iframe.
+
 ### YouTube
 
 [Play on CodePen](https://codepen.io/rqrauhvmra/pen/rgpjXE)

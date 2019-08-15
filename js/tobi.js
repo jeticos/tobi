@@ -304,6 +304,14 @@
           iframe.setAttribute('src', '')
           iframe.setAttribute('data-src', href)
 
+          if (el.getAttribute('data-width')) {
+            iframe.style.maxWidth = el.getAttribute('data-width') + 'px'
+          }
+
+          if (el.getAttribute('data-height')) {
+            iframe.style.maxHeight = el.getAttribute('data-height') + 'px'
+          }
+
           // Add iframe to container
           container.appendChild(iframe)
 
