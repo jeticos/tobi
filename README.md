@@ -265,8 +265,8 @@ The following options are available:
 | `next(callback)` | Show the next slide in the lightbox. Optional `callback` (function). |
 | `prev(callback)` | Show the previous slide in the lightbox. Optional `callback` (function). |
 | `close(callback)` | Close the lightbox. Optional `callback` (function). |
-| `add(element, callback)` | Add a new `element` (DOM element) dynamically, even if the lightbox is open ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
-| `remove(element, callback)` | Remove a new `element` (DOM element) dynamically, even if the lightbox is open. Optional `callback` (function) as a second argument. |
+| `add(element, callback)` | Add an `element` (DOM element) dynamically, even if the lightbox is open ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
+| `remove(element, callback)` | Remove an `element` (DOM element) dynamically, even if the lightbox is open. Optional `callback` (function) as a second argument. |
 | `isOpen()` | Check if the lightbox is open. |
 | `currentSlide()` | Return the current slide index. |
 | `destroy()` | Destroy the lightbox. Optional `callback` (function). |
