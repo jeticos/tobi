@@ -261,13 +261,15 @@ The following options are available:
 
 | Function | Description |
 | --- | --- |
-| `open(index, callback)` | Opens the lightbox. Optional at specific `index` (number) and optional `callback` (function) as a second argument. |
-| `next(callback)` | Shows the next slide in the lightbox. Optional `callback` (function). |
-| `prev(callback)` | Shows the previous slide in the lightbox. Optional `callback` (function). |
-| `close(callback)` | Closes the lightbox. Optional `callback` (function). |
-| `add(element, callback)` | Adds an new `element` (DOM element) dynamically, even if the lightbox is open ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
-| `isOpen()` | Checks if the lightbox is open. |
-| `currentSlide()` | Returns the current slide index. |
+| `open(index, callback)` | Open the lightbox. Optional at specific `index` (number) and optional `callback` (function) as a second argument. |
+| `next(callback)` | Show the next slide in the lightbox. Optional `callback` (function). |
+| `prev(callback)` | Show the previous slide in the lightbox. Optional `callback` (function). |
+| `close(callback)` | Close the lightbox. Optional `callback` (function). |
+| `add(element, callback)` | Add a new `element` (DOM element) dynamically, even if the lightbox is open ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
+| `remove(element, callback)` | Remove a new `element` (DOM element) dynamically, even if the lightbox is open. Optional `callback` (function) as a second argument. |
+| `isOpen()` | Check if the lightbox is open. |
+| `currentSlide()` | Return the current slide index. |
+| `destroy()` | Destroy the lightbox. Optional `callback` (function). |
 
 ## Browser support
 
