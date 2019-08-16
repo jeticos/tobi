@@ -444,6 +444,7 @@
      * Check dependencies
      *
      * @param {HTMLElement} el - Element to add
+     * @param {function} callback - Optional callback to call after add
      */
     const checkDependencies = function checkDependencies (el, callback) {
       // Check if there is a YouTube video and if the YouTube iframe-API is ready
