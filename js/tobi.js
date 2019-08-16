@@ -661,7 +661,7 @@
      */
     const createSlide = function createSlide (el) {
       // Detect type
-      for (const index in supportedElements) {
+      for (let index in supportedElements) { // const index don't work in IE
         if (Object.prototype.hasOwnProperty.call(supportedElements, index)) {
           if (supportedElements[index].checkSupport(el)) {
             // Create slide elements
@@ -1309,7 +1309,7 @@
      * Update slider
      */
     const updateSlider = function updateSlider () {
-      for (const name in groups) {
+      for (let name in groups) { // const name don't work in IE
         if (!Object.prototype.hasOwnProperty.call(groups, name)) continue
         groups[name].slider.style.display = activeGroup === name ? 'block' : 'none'
       }
