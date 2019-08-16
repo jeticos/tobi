@@ -29,7 +29,7 @@
      *
      */
     let config = {}
-    let browserWindow = window
+    const browserWindow = window
     let figcaptionId = 0
     let lightbox = null
     let prevButton = null
@@ -47,10 +47,10 @@
     let offsetTmp = null
     let resizeTicking = false
     let isYouTubeDependencieLoaded = false
-    let waitingEls = []
-    let player = []
+    const waitingEls = []
+    const player = []
     let playerId = 0
-    let groupAtts = {
+    const groupAtts = {
       gallery: [],
       slider: null,
       sliderElements: [],
@@ -125,11 +125,11 @@
         },
 
         init: function (el, container) {
-          let figure = document.createElement('figure')
-          let figcaption = document.createElement('figcaption')
-          let image = document.createElement('img')
-          let thumbnail = el.querySelector('img')
-          let loadingIndicator = document.createElement('div')
+          const figure = document.createElement('figure')
+          const figcaption = document.createElement('figcaption')
+          const image = document.createElement('img')
+          const thumbnail = el.querySelector('img')
+          const loadingIndicator = document.createElement('div')
 
           image.style.opacity = '0'
 
@@ -184,14 +184,14 @@
         },
 
         onLoad: function (container) {
-          let image = container.querySelector('img')
+          const image = container.querySelector('img')
 
           if (!image.hasAttribute('data-src')) {
             return
           }
 
-          let figcaption = container.querySelector('figcaption')
-          let loadingIndicator = container.querySelector('.tobi-loader')
+          const figcaption = container.querySelector('figcaption')
+          const loadingIndicator = container.querySelector('.tobi-loader')
 
           image.onload = function () {
             container.removeChild(loadingIndicator)
@@ -221,8 +221,8 @@
         },
 
         init: function (el, container) {
-          let targetSelector = el.hasAttribute('href') ? el.getAttribute('href') : el.getAttribute('data-target')
-          let target = document.querySelector(targetSelector)
+          const targetSelector = el.hasAttribute('href') ? el.getAttribute('href') : el.getAttribute('data-target')
+          const target = document.querySelector(targetSelector)
 
           if (!target) {
             throw new Error('Ups, I can\'t find the target ' + targetSelector + '.')
@@ -240,7 +240,7 @@
         },
 
         onLoad: function (container) {
-          let video = container.querySelector('video')
+          const video = container.querySelector('video')
 
           if (video) {
             if (video.hasAttribute('data-time') && video.readyState > 0) {
@@ -256,7 +256,7 @@
         },
 
         onLeave: function (container) {
-          let video = container.querySelector('video')
+          const video = container.querySelector('video')
 
           if (video) {
             if (!video.paused) {
@@ -272,20 +272,20 @@
         },
 
         onCleanup: function (container) {
-          let video = container.querySelector('video')
+          const video = container.querySelector('video')
 
           if (video) {
             if (video.readyState > 0 && video.readyState < 3 && video.duration !== video.currentTime) {
               // Some data has been loaded but not the whole package.
               // In order to save bandwidth, stop downloading as soon as possible.
-              let clone = video.cloneNode(true)
+              const videoClone = video.cloneNode(true)
 
               removeSources(video)
               video.load()
 
               video.parentNode.removeChild(video)
 
-              container.appendChild(clone)
+              container.appendChild(videoClone)
             }
           }
         }
@@ -297,8 +297,8 @@
         },
 
         init: function (el, container) {
-          let iframe = document.createElement('iframe')
-          let href = el.hasAttribute('href') ? el.getAttribute('href') : el.getAttribute('data-target')
+          const iframe = document.createElement('iframe')
+          const href = el.hasAttribute('href') ? el.getAttribute('href') : el.getAttribute('data-target')
 
           iframe.setAttribute('frameborder', '0')
           iframe.setAttribute('src', '')
@@ -324,7 +324,7 @@
         },
 
         onLoad: function (container) {
-          let iframe = container.querySelector('iframe')
+          const iframe = container.querySelector('iframe')
 
           iframe.setAttribute('src', iframe.getAttribute('data-src'))
         },
@@ -344,7 +344,7 @@
         },
 
         init: function (el, container) {
-          let iframePlaceholder = document.createElement('div')
+          const iframePlaceholder = document.createElement('div')
 
           // Add iframePlaceholder to container
           container.appendChild(iframePlaceholder)
@@ -401,9 +401,9 @@
      */
     if (!Object.entries) {
       Object.entries = function (obj) {
-        let ownProps = Object.keys(obj)
+        const ownProps = Object.keys(obj)
         let i = ownProps.length
-        let resArray = new Array(i)
+        const resArray = new Array(i)
 
         while (i--) {
           resArray[i] = [ownProps[i], obj[ownProps[i]]]
@@ -423,12 +423,11 @@
 
       // Check if the lightbox already exists
       if (!lightbox) {
-        // Create the lightbox
         createLightbox()
       }
 
       // Get a list of all elements within the document
-      let els = document.querySelectorAll(config.selector)
+      const els = document.querySelectorAll(config.selector)
 
       if (!els) {
         throw new Error('Ups, I can\'t find the selector ' + config.selector + '.')
@@ -450,8 +449,8 @@
       // Check if there is a YouTube video and if the YouTube iframe-API is ready
       if (document.querySelector('[data-type="youtube"]') !== null && !isYouTubeDependencieLoaded) {
         if (document.getElementById('iframe_api') === null) {
-          let tag = document.createElement('script')
-          let firstScriptTag = document.getElementsByTagName('script')[0]
+          const tag = document.createElement('script')
+          const firstScriptTag = document.getElementsByTagName('script')[0]
 
           tag.id = 'iframe_api'
           tag.src = 'https://www.youtube.com/iframe_api'
@@ -482,7 +481,7 @@
      * @return {string}
      */
     const getGroupName = function getGroupName (el) {
-      return el.hasAttribute('data-group') ? (el.getAttribute('data-group').length > 0 ? el.getAttribute('data-group') : 'default') : 'default'
+      return el.hasAttribute('data-group') ? el.getAttribute('data-group') : 'default'
     }
 
     /**
@@ -507,7 +506,7 @@
       if (!Object.prototype.hasOwnProperty.call(groups, newGroup)) {
         groups[newGroup] = copyObject(groupAtts)
 
-        createLightboxSlider()
+        createSlider()
       }
 
       // Check if element already exists
@@ -517,7 +516,7 @@
 
         // Set zoom icon if necessary
         if (config.zoom && el.querySelector('img')) {
-          let tobiZoom = document.createElement('div')
+          const tobiZoom = document.createElement('div')
 
           tobiZoom.className = 'tobi-zoom__icon'
           tobiZoom.innerHTML = config.zoomText
@@ -527,13 +526,12 @@
         }
 
         // Bind click event handler
-        el.addEventListener('click', click)
+        el.addEventListener('click', triggerTobi)
 
-        // Create the slide
-        createLightboxSlide(el)
+        createSlide(el)
 
         if (isOpen() && newGroup === activeGroup) {
-          recheckConfig()
+          updateConfig()
           updateLightbox()
         }
 
@@ -552,36 +550,37 @@
      * @param {function} callback - Optional callback to call after remove
      */
     const remove = function add (el, callback) {
-      let groupName = getGroupName(el)
+      const groupName = getGroupName(el)
 
       // Check if element exists
       if (groups[groupName].gallery.indexOf(el) === -1) {
         // TODO
       } else {
-        let slideIndex = groups[groupName].gallery.indexOf(el)
-        let slideEl = groups[groupName].sliderElements[slideIndex]
+        const slideIndex = groups[groupName].gallery.indexOf(el)
+        const slideEl = groups[groupName].sliderElements[slideIndex]
 
         // TODO If the element to be removed is the currently visible slide
 
-        //groups[groupName].gallery.splice(groups[groupName].gallery.indexOf(el))
+        // TODO Remove element
+        // groups[groupName].gallery.splice(groups[groupName].gallery.indexOf(el)) don't work
         groups[groupName].elementsLength--
 
         // Remove zoom icon if necessary
         if (config.zoom && el.querySelector('.tobi-zoom__icon')) {
-          let zoomIcon = el.querySelector('.tobi-zoom__icon')
+          const zoomIcon = el.querySelector('.tobi-zoom__icon')
 
           zoomIcon.parentNode.classList.remove('tobi-zoom')
           zoomIcon.parentNode.removeChild(zoomIcon)
         }
 
         // Unbind click event handler
-        el.removeEventListener('click', click)
+        el.removeEventListener('click', triggerTobi)
 
-        // TODO Remove Slide
+        // Remove slide
         slideEl.parentNode.removeChild(slideEl)
 
         if (isOpen() && groupName === activeGroup) {
-          recheckConfig()
+          updateConfig()
           updateLightbox()
         }
 
@@ -596,13 +595,13 @@
      *
      */
     const createLightbox = function createLightbox () {
-      // Create lightbox container
+      // Create the lightbox
       lightbox = document.createElement('div')
       lightbox.setAttribute('role', 'dialog')
       lightbox.setAttribute('aria-hidden', 'true')
       lightbox.className = 'tobi'
 
-      // Create previous button
+      // Create the previous button
       prevButton = document.createElement('button')
       prevButton.className = 'tobi__prev'
       prevButton.setAttribute('type', 'button')
@@ -610,7 +609,7 @@
       prevButton.innerHTML = config.navText[0]
       lightbox.appendChild(prevButton)
 
-      // Create next button
+      // Create the next button
       nextButton = document.createElement('button')
       nextButton.className = 'tobi__next'
       nextButton.setAttribute('type', 'button')
@@ -618,7 +617,7 @@
       nextButton.innerHTML = config.navText[1]
       lightbox.appendChild(nextButton)
 
-      // Create close button
+      // Create the close button
       closeButton = document.createElement('button')
       closeButton.className = 'tobi__close'
       closeButton.setAttribute('type', 'button')
@@ -626,7 +625,7 @@
       closeButton.innerHTML = config.closeText
       lightbox.appendChild(closeButton)
 
-      // Create counter
+      // Create the counter
       counter = document.createElement('div')
       counter.className = 'tobi__counter'
       lightbox.appendChild(counter)
@@ -650,7 +649,7 @@
     /**
      * Create a slider
      */
-    const createLightboxSlider = function createLightboxSlider () {
+    const createSlider = function createSlider () {
       groups[newGroup].slider = document.createElement('div')
       groups[newGroup].slider.className = 'tobi__slider'
       lightbox.appendChild(groups[newGroup].slider)
@@ -660,14 +659,14 @@
      * Create a slide
      *
      */
-    const createLightboxSlide = function createLightboxSlide (el) {
+    const createSlide = function createSlide (el) {
       // Detect type
-      for (let index in supportedElements) {
+      for (const index in supportedElements) {
         if (Object.prototype.hasOwnProperty.call(supportedElements, index)) {
           if (supportedElements[index].checkSupport(el)) {
             // Create slide elements
-            let sliderElement = document.createElement('div')
-            let sliderElementContent = document.createElement('div')
+            const sliderElement = document.createElement('div')
+            const sliderElementContent = document.createElement('div')
 
             sliderElement.className = 'tobi__slider__slide'
             sliderElement.style.position = 'absolute'
@@ -693,7 +692,7 @@
     }
 
     /**
-     * Open the lightbox
+     * Open Tobi
      *
      * @param {number} index - Index to load
      * @param {function} callback - Optional callback to call after open
@@ -719,14 +718,12 @@
         throw new Error('Ups, I can\'t find slide ' + index + '.')
       }
 
-      // setSlides()
-
       if (config.hideScrollbar) {
         document.documentElement.classList.add('tobi-is-open')
         document.body.classList.add('tobi-is-open')
       }
 
-      recheckConfig()
+      updateConfig()
 
       // Hide close if necessary
       if (!config.close) {
@@ -734,16 +731,13 @@
         closeButton.setAttribute('aria-hidden', 'true')
       }
 
-      // Save the user’s focus
+      // Save user’s focus
       lastFocus = document.activeElement
 
       // Set current index
       groups[activeGroup].currentIndex = index
 
-      // Clear drag
       clearDrag()
-
-      // Bind events
       bindEvents()
 
       // Load slide
@@ -752,10 +746,9 @@
       // Makes lightbox appear, too
       lightbox.setAttribute('aria-hidden', 'false')
 
-      // Update lightbox
       updateLightbox()
 
-      // Preload late
+      // Preload previous and next slide
       preload(groups[activeGroup].currentIndex + 1)
       preload(groups[activeGroup].currentIndex - 1)
 
@@ -765,7 +758,7 @@
     }
 
     /**
-     * Close the lightbox
+     * Close Tobi
      *
      * @param {function} callback - Optional callback to call after close
      */
@@ -779,15 +772,15 @@
         document.body.classList.remove('tobi-is-open')
       }
 
-      // Unbind events
       unbindEvents()
 
       // Reenable the user’s focus
       lastFocus.focus()
 
       // Don't forget to cleanup our current element
-      let container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector('.tobi__slider__slide__content')
-      let type = container.getAttribute('data-type')
+      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector('.tobi__slider__slide__content')
+      const type = container.getAttribute('data-type')
+
       supportedElements[type].onLeave(container)
       supportedElements[type].onCleanup(container)
 
@@ -811,8 +804,8 @@
         return
       }
 
-      let container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
-      let type = container.getAttribute('data-type')
+      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const type = container.getAttribute('data-type')
 
       supportedElements[type].onPreload(container)
     }
@@ -828,14 +821,14 @@
         return
       }
 
-      let container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
-      let type = container.getAttribute('data-type')
+      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const type = container.getAttribute('data-type')
 
       supportedElements[type].onLoad(container)
     }
 
     /**
-     * Navigate to the previous slide
+     * Show the previous slide
      *
      * @param {function} callback - Optional callback function
      */
@@ -854,7 +847,7 @@
     }
 
     /**
-     * Navigate to the next slide
+     * Show the next slide
      *
      * @param {function} callback - Optional callback function
      */
@@ -883,8 +876,8 @@
         return
       }
 
-      let container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
-      let type = container.getAttribute('data-type')
+      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
     }
@@ -900,14 +893,14 @@
         return
       }
 
-      let container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
-      let type = container.getAttribute('data-type')
+      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const type = container.getAttribute('data-type')
 
       supportedElements[type].onCleanup(container)
     }
 
     /**
-     * Update the offset
+     * Update offset
      *
      */
     const updateOffset = function updateOffset () {
@@ -920,7 +913,7 @@
     }
 
     /**
-     * Update the counter
+     * Update counter
      *
      */
     const updateCounter = function updateCounter () {
@@ -928,7 +921,7 @@
     }
 
     /**
-     * Set the focus to the next element
+     * Set focus to the next slide
      *
      * @param {string} dir - Current slide direction
      */
@@ -993,10 +986,10 @@
      *
      */
     const updateAfterDrag = function updateAfterDrag () {
-      let movementX = drag.endX - drag.startX
-      let movementY = drag.endY - drag.startY
-      let movementXDistance = Math.abs(movementX)
-      let movementYDistance = Math.abs(movementY)
+      const movementX = drag.endX - drag.startX
+      const movementY = drag.endY - drag.startY
+      const movementXDistance = Math.abs(movementX)
+      const movementYDistance = Math.abs(movementY)
 
       if (movementX > 0 && movementXDistance > config.threshold && groups[activeGroup].currentIndex > 0) {
         prev()
@@ -1010,10 +1003,10 @@
     }
 
     /**
-     * Click event handler
+     * Click event handler to trigger Tobi
      *
      */
-    const click = function click (event) {
+    const triggerTobi = function click (event) {
       event.preventDefault()
 
       activeGroup = getGroupName(this)
@@ -1045,7 +1038,7 @@
      */
     const keydownHandler = function keydownHandler (event) {
       if (event.keyCode === 9 || event.code === 'Tab') {
-        // `TAB` Key: Navigate to the next/previous focusable element
+        // `TAB` Key: Navigate to the next / previous focusable element
         if (event.shiftKey) {
           // Step backwards in the tab-order
           if (document.activeElement === firstFocusableEl) {
@@ -1060,15 +1053,15 @@
           }
         }
       } else if (event.keyCode === 27 || event.code === 'Escape') {
-        // `ESC` Key: Close the lightbox
+        // `ESC` Key: Close Tobi
         event.preventDefault()
         close()
       } else if (event.keyCode === 37 || event.code === 'ArrowLeft') {
-        // `PREV` Key: Navigate to the previous slide
+        // `PREV` Key: Show the previous slide
         event.preventDefault()
         prev()
       } else if (event.keyCode === 39 || event.code === 'ArrowRight') {
-        // `NEXT` Key: Navigate to the next slide
+        // `NEXT` Key: Show the next slide
         event.preventDefault()
         next()
       }
@@ -1277,7 +1270,7 @@
      * @param {HTMLElement} el - Element to remove all `src` attributes
      */
     const removeSources = function setVideoSources (el) {
-      let sources = el.querySelectorAll('src')
+      const sources = el.querySelectorAll('src')
 
       if (sources) {
         Array.prototype.forEach.call(sources, function (source) {
@@ -1290,7 +1283,7 @@
      * Update Config
      *
      */
-    const recheckConfig = function recheckConfig () {
+    const updateConfig = function updateConfig () {
       if (config.draggable && groups[activeGroup].elementsLength > 1 && !groups[activeGroup].slider.classList.contains('tobi__slider--is-draggable')) {
         groups[activeGroup].slider.classList.add('tobi__slider--is-draggable')
       }
@@ -1313,10 +1306,10 @@
     }
 
     /**
-     * Hide all unused sliders
+     * Update slider
      */
     const updateSlider = function updateSlider () {
-      for (let name in groups) {
+      for (const name in groups) {
         if (!Object.prototype.hasOwnProperty.call(groups, name)) continue
         groups[name].slider.style.display = activeGroup === name ? 'block' : 'none'
       }
@@ -1335,7 +1328,7 @@
     }
 
     /**
-     * Destroy the lightbox
+     * Destroy Tobi
      *
      * @param {function} callback - Optional callback to call after destroy
      */
@@ -1344,11 +1337,11 @@
         close()
       }
 
-      // TODO Clean up
-      const entries = Object.entries(groups)
+      // TODO Cleanup
+      const groupsEntries = Object.entries(groups)
 
-      Array.prototype.forEach.call(entries, function (entrie) {
-        let els = entrie[1].gallery
+      Array.prototype.forEach.call(groupsEntries, function (groupsEntrie) {
+        const els = groupsEntrie[1].gallery
 
         Array.prototype.forEach.call(els, function (el) {
           remove(el)
@@ -1369,7 +1362,7 @@
     }
 
     /**
-     * Check if the lightbox is open
+     * Check if Tobi is open
      *
      */
     const isOpen = function isOpen () {
