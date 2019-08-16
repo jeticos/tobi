@@ -9,7 +9,7 @@ An accessible, simple and light-weight open source lightbox script with no depen
 
 [Play on CodePen](https://codepen.io/collection/nbqJVV)
 
-![A picture of the lightbox](https://rqrauhvmra.com/tobi/tobi.png)
+![Open slide with a picture of the Berlin television tower](https://rqrauhvmra.com/tobi/tobi.png)
 
 ## Table of contents
 
@@ -37,19 +37,20 @@ An accessible, simple and light-weight open source lightbox script with no depen
 - Accessible:
   - ARIA roles
   - Keyboard navigation:
-    - `Prev` / `Next` Keys: Navigate through items
-    - `ESCAPE` Key: Close the lightbox
-    - `TAB` Key: Focus elements within the lightbox, not outside
+    - `Prev`/ `Next` Keys: Navigate through slides
+    - `ESCAPE` Key: Close Tobi
+    - `TAB` Key: Focus elements within Tobi, not outside
   - User preference media features:
     - `prefers-reduced-motion` media query
-  - When the lightbox opens, focus is set to the first focusable element in the lightbox
-  - When the lightbox closes, focus returns to what was in focus before the lightbox opened
+  - When Tobi opens, focus is set to the first focusable element in Tobi
+  - When Tobi closes, focus returns to what was in focus before Tobi opened
 - Touch & Mouse drag support:
-  - Drag / Swipe to navigate through items, close the lightbox with a vertical drag/swipe
+  - Drag/ Swipe horizontal to navigate through slides
+  - Drag/ Swipe vertical to close Tobi
 - light-weight
 - Responsive
-- Iframe support
-- Inline HTML support
+- Support iframes
+- Support inline HTML
 
 ## Get Tobi
 
@@ -63,7 +64,7 @@ JavaScript: `js/tobi.min.js` minified, or `js/tobi.js` un-minified
 
 Tobi is also available on npm.
 
-`$ npm install @rqrauhvmra/tobi --save`
+`npm install @rqrauhvmra/tobi --save`
 
 ## Usage
 
@@ -240,7 +241,7 @@ The following options are available:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| selector | string | ".lightbox" | All elements with this class triggers the lightbox. |
+| selector | string | ".lightbox" | All elements with this class triggers Tobi. |
 | captions | bool | true | Display captions, if available. |
 | captionsSelector | "self", "img" | "img" | Set the element where the caption is. Set it to "self" for the `a` tag itself. |
 | captionAttribute | string | "alt" | Get the caption from given attribute. |
@@ -255,9 +256,9 @@ The following options are available:
 | keyboard | bool | true | Allow keyboard navigation. |
 | zoom | bool | true | Display zoom icon. |
 | zoomText | string | "inline svg" | Text or HTML for the zoom icon. |
-| docClose | bool | true | Closes the lightbox when clicking outside. |
-| swipeClose | bool | true | Swipe up to close lightbox. |
-| hideScrollbar | bool | true | Hide browser scrollbars if lightbox is displayed. |
+| docClose | bool | true | Click outside to close Tobi. |
+| swipeClose | bool | true | Swipe up to close Tobi. |
+| hideScrollbar | bool | true | Hide browser scrollbars if Tobi is displayed. |
 | draggable | bool | true | Use dragging and touch swiping. |
 | threshold | number | 100 | Touch and mouse dragging threshold (in px). |
 | autoplayVideo | bool | false | Videos will automatically start playing as soon as they can do so without stopping to finish loading the data. |
@@ -266,15 +267,17 @@ The following options are available:
 
 | Function | Description |
 | --- | --- |
-| `open(index, callback)` | Open the lightbox. Optional at specific `index` (number) and optional `callback` (function) as a second argument. |
-| `next(callback)` | Show the next slide in the lightbox. Optional `callback` (function). |
-| `prev(callback)` | Show the previous slide in the lightbox. Optional `callback` (function). |
-| `close(callback)` | Close the lightbox. Optional `callback` (function). |
-| `add(element, callback)` | Add an `element` (DOM element) dynamically, even if the lightbox is open ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
-| `remove(element, callback)` | Remove an `element` (DOM element) dynamically, even if the lightbox is open. Optional `callback` (function) as a second argument. |
-| `isOpen()` | Check if the lightbox is open. |
+| `open(index, callback)` | Open Tobi. Optional with a specific slide with `index` (number). Optional `callback` (function) as a second argument. |
+| `next(callback)` | Show the next slide. Optional `callback` (function). |
+| `prev(callback)` | Show the previous slide. Optional `callback` (function). |
+| `close(callback)` | Close Tobi. Optional `callback` (function). |
+| `add(element, callback)` | Add an `element` (DOM element) ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
+| `remove(element, callback)` | Remove an `element` (DOM element). Optional `callback` (function) as a second argument. |
+| `isOpen()` | Check if Tobi is open. |
 | `currentSlide()` | Return the current slide index. |
-| `destroy()` | Destroy the lightbox. Optional `callback` (function). |
+| `selectGroup()` | Select a specific group. |
+| `currentGroup()` | Return the current group. |
+| `destroy()` | Destroy Tobi. Optional `callback` (function). |
 
 ## Browser support
 
@@ -292,8 +295,7 @@ Tobi has been tested in the following browsers (all the latest versions):
 
 ## Contributing
 
-- Report issues
-- Open pull request with improvements
+- Open an issue or a pull request to suggest changes or additions
 - Spread the word
 
 ## License
