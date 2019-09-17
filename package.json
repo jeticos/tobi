@@ -34,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/rqrauhvmra/tobi/issues"
   },
-  "homepage": "https://github.com/rqrauhvmra/tobi"
+  "homepage": "https://github.com/rqrauhvmra/tobi",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@rqrauhvmra"
+  }
 }
