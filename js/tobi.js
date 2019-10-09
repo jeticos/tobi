@@ -63,6 +63,17 @@
     let activeGroup = null
 
     /**
+     * Global constants
+     *
+     */
+    const tobiContentString = '.tobi .content'
+    const tobiIsOpenString = 'tobi-is-open'
+    const tobiZoomIconString = 'tobi-zoom-icon'
+    const tobiZoomString = 'tobi-zoom'
+    const sliderIsDraggingString = 'slider--is-dragging'
+    const sliderIsDraggableString = 'slider--is-draggable'
+
+    /**
      * Merge default options with user options
      *
      * @param {Object} userOptions - Optional user options
@@ -167,7 +178,7 @@
           container.appendChild(figure)
 
           // Create loading indicator
-          loadingIndicator.className = 'tobi-loader'
+          loadingIndicator.className = 'loader'
           loadingIndicator.setAttribute('role', 'progressbar')
           loadingIndicator.setAttribute('aria-label', config.loadingIndicatorLabel)
 
@@ -191,7 +202,7 @@
           }
 
           const figcaption = container.querySelector('figcaption')
-          const loadingIndicator = container.querySelector('.tobi-loader')
+          const loadingIndicator = container.querySelector('.loader')
 
           image.onload = function () {
             container.removeChild(loadingIndicator)
@@ -518,10 +529,10 @@
         if (config.zoom && el.querySelector('img')) {
           const tobiZoom = document.createElement('div')
 
-          tobiZoom.className = 'tobi-zoom__icon'
+          tobiZoom.className = tobiZoomIconString
           tobiZoom.innerHTML = config.zoomText
 
-          el.classList.add('tobi-zoom')
+          el.classList.add(tobiZoomString)
           el.appendChild(tobiZoom)
         }
 
@@ -566,10 +577,10 @@
         groups[groupName].elementsLength--
 
         // Remove zoom icon if necessary
-        if (config.zoom && el.querySelector('.tobi-zoom__icon')) {
-          const zoomIcon = el.querySelector('.tobi-zoom__icon')
+        if (config.zoom && el.querySelector('.' + tobiZoomIconString)) {
+          const zoomIcon = el.querySelector('.' + tobiZoomIconString)
 
-          zoomIcon.parentNode.classList.remove('tobi-zoom')
+          zoomIcon.parentNode.classList.remove(tobiZoomString)
           zoomIcon.parentNode.removeChild(zoomIcon)
         }
 
@@ -603,7 +614,7 @@
 
       // Create the previous button
       prevButton = document.createElement('button')
-      prevButton.className = 'tobi__prev'
+      prevButton.className = 'prev'
       prevButton.setAttribute('type', 'button')
       prevButton.setAttribute('aria-label', config.navLabel[0])
       prevButton.innerHTML = config.navText[0]
@@ -611,7 +622,7 @@
 
       // Create the next button
       nextButton = document.createElement('button')
-      nextButton.className = 'tobi__next'
+      nextButton.className = 'next'
       nextButton.setAttribute('type', 'button')
       nextButton.setAttribute('aria-label', config.navLabel[1])
       nextButton.innerHTML = config.navText[1]
@@ -619,7 +630,7 @@
 
       // Create the close button
       closeButton = document.createElement('button')
-      closeButton.className = 'tobi__close'
+      closeButton.className = 'close'
       closeButton.setAttribute('type', 'button')
       closeButton.setAttribute('aria-label', config.closeLabel)
       closeButton.innerHTML = config.closeText
@@ -627,7 +638,7 @@
 
       // Create the counter
       counter = document.createElement('div')
-      counter.className = 'tobi__counter'
+      counter.className = 'counter'
       lightbox.appendChild(counter)
 
       // Resize event using requestAnimationFrame
@@ -651,7 +662,7 @@
      */
     const createSlider = function createSlider () {
       groups[newGroup].slider = document.createElement('div')
-      groups[newGroup].slider.className = 'tobi__slider'
+      groups[newGroup].slider.className = 'slider'
       lightbox.appendChild(groups[newGroup].slider)
     }
 
@@ -668,10 +679,10 @@
             const sliderElement = document.createElement('div')
             const sliderElementContent = document.createElement('div')
 
-            sliderElement.className = 'tobi__slider__slide'
+            sliderElement.className = 'slide'
             sliderElement.style.position = 'absolute'
             sliderElement.style.left = groups[newGroup].x * 100 + '%'
-            sliderElementContent.className = 'tobi__slider__slide__content'
+            sliderElementContent.className = 'content'
 
             // Create type elements
             supportedElements[index].init(el, sliderElementContent)
@@ -719,8 +730,8 @@
       }
 
       if (config.hideScrollbar) {
-        document.documentElement.classList.add('tobi-is-open')
-        document.body.classList.add('tobi-is-open')
+        document.documentElement.classList.add(tobiIsOpenString)
+        document.body.classList.add(tobiIsOpenString)
       }
 
       updateConfig()
@@ -768,8 +779,8 @@
       }
 
       if (config.hideScrollbar) {
-        document.documentElement.classList.remove('tobi-is-open')
-        document.body.classList.remove('tobi-is-open')
+        document.documentElement.classList.remove(tobiIsOpenString)
+        document.body.classList.remove(tobiIsOpenString)
       }
 
       unbindEvents()
@@ -778,7 +789,7 @@
       lastFocus.focus()
 
       // Don't forget to cleanup our current element
-      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector(tobiContentString)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
@@ -804,7 +815,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentString)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onPreload(container)
@@ -821,7 +832,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentString)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLoad(container)
@@ -876,7 +887,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentString)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
@@ -893,7 +904,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentString)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onCleanup(container)
@@ -1023,7 +1034,7 @@
         prev()
       } else if (event.target === nextButton) {
         next()
-      } else if (event.target === closeButton || (event.target.className === 'tobi__slider__slide' && config.docClose)) {
+      } else if (event.target === closeButton || (event.target.classList.contains('slide') && config.docClose)) {
         close()
       }
 
@@ -1084,7 +1095,7 @@
       drag.startX = event.touches[0].pageX
       drag.startY = event.touches[0].pageY
 
-      groups[activeGroup].slider.classList.add('tobi__slider--is-dragging')
+      groups[activeGroup].slider.classList.add(sliderIsDraggingString)
     }
 
     /**
@@ -1113,7 +1124,7 @@
 
       pointerDown = false
 
-      groups[activeGroup].slider.classList.remove('tobi__slider--is-dragging')
+      groups[activeGroup].slider.classList.remove(sliderIsDraggingString)
 
       if (drag.endX) {
         isDraggingX = false
@@ -1143,7 +1154,7 @@
       drag.startX = event.pageX
       drag.startY = event.pageY
 
-      groups[activeGroup].slider.classList.add('tobi__slider--is-dragging')
+      groups[activeGroup].slider.classList.add(sliderIsDraggingString)
     }
 
     /**
@@ -1170,7 +1181,7 @@
 
       pointerDown = false
 
-      groups[activeGroup].slider.classList.remove('tobi__slider--is-dragging')
+      groups[activeGroup].slider.classList.remove(sliderIsDraggingString)
 
       if (drag.endX) {
         isDraggingX = false
@@ -1284,8 +1295,8 @@
      *
      */
     const updateConfig = function updateConfig () {
-      if (config.draggable && groups[activeGroup].elementsLength > 1 && !groups[activeGroup].slider.classList.contains('tobi__slider--is-draggable')) {
-        groups[activeGroup].slider.classList.add('tobi__slider--is-draggable')
+      if (config.draggable && groups[activeGroup].elementsLength > 1 && !groups[activeGroup].slider.classList.contains(sliderIsDraggableString)) {
+        groups[activeGroup].slider.classList.add(sliderIsDraggableString)
       }
 
       // Hide buttons if necessary
