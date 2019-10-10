@@ -33,7 +33,7 @@
   }
 
   /* Slider */
-  .slider {
+  &-slider {
     bottom: 0;
     left: 0;
     position: absolute;
@@ -61,7 +61,7 @@
   }
 
   /* Slide */
-  .slide {
+  &-slide {
     align-items: center;
     display: flex;
     height: 100%;
@@ -70,7 +70,7 @@
   }
 
   /* Slide content */
-  .content {
+  &-content {
     > figure {
       margin: 0;
       position: relative;
@@ -213,7 +213,7 @@
   }
 
   /* Counter */
-  .counter {
+  &-counter {
     align-items: center;
     background-color: $counter-background;
     color: $counter-color;
@@ -232,7 +232,7 @@
   }
 
   /* Loader */
-  .loader {
+  &-loader {
     display: inline-block;
     height: em(100);
     left: calc(50% - #{em(50)});
