@@ -66,17 +66,16 @@
      * Global constants
      *
      */
-    const tobiContentString = 'tobi-content',
-      tobiIsOpenString = 'tobi-is-open',
+    const tobiIsOpenString = 'tobi-is-open',
       tobiZoomIconString = 'tobi-zoom-icon',
       tobiZoomString = 'tobi-zoom',
       tobiSliderIsDraggingString = 'tobi-slider--is-dragging',
       tobiSliderIsDraggableString = 'tobi-slider--is-draggable',
       tobiSlideString = 'tobi-slide',
       tobiLoaderString = 'tobi-loader',
-      tobiContentSelector = '.' + tobiContentString,
       tobiZoomIconSelector = '.' + tobiZoomIconString,
-      tobiLoaderSelector = '.' + tobiLoaderString
+      tobiLoaderSelector = '.' + tobiLoaderString,
+      dataTypeSelector = '[data-type]'
 
     /**
      * Merge default options with user options
@@ -687,7 +686,6 @@
             sliderElement.className = tobiSlideString
             sliderElement.style.position = 'absolute'
             sliderElement.style.left = groups[newGroup].x * 100 + '%'
-            sliderElementContent.className = tobiContentString
 
             // Create type elements
             supportedElements[index].init(el, sliderElementContent)
@@ -794,7 +792,7 @@
       lastFocus.focus()
 
       // Don't forget to cleanup our current element
-      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector(tobiContentSelector)
+      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector(dataTypeSelector)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
@@ -820,7 +818,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentSelector)
+      const container = groups[activeGroup].sliderElements[index].querySelector(dataTypeSelector)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onPreload(container)
@@ -837,7 +835,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentSelector)
+      const container = groups[activeGroup].sliderElements[index].querySelector(dataTypeSelector)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLoad(container)
@@ -892,7 +890,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentSelector)
+      const container = groups[activeGroup].sliderElements[index].querySelector(dataTypeSelector)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
@@ -909,7 +907,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector(tobiContentSelector)
+      const container = groups[activeGroup].sliderElements[index].querySelector(dataTypeSelector)
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onCleanup(container)

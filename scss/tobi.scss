@@ -51,11 +51,11 @@
       }
     }
 
-    &--is-draggable .tobi-content {
+    &--is-draggable [data-type]  {
       cursor: grab;
     }
 
-    &--is-dragging .tobi-content {
+    &--is-dragging [data-type] {
       cursor: grabbing;
     }
   }
@@ -70,7 +70,18 @@
   }
 
   /* Slide content */
-  &-content {
+  [data-type] {
+    max-height: $slide-max-height;
+    max-width: $slide-max-width;
+    overflow: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    iframe,
+    video {
+      display: block !important;
+    }
+    
     > figure {
       margin: 0;
       position: relative;
@@ -95,37 +106,24 @@
         width: 100%;
       }
     }
+  }
 
-    &[data-type] {
+  [data-type="html"] {
+    video {
+      cursor: auto;
       max-height: $slide-max-height;
       max-width: $slide-max-width;
-      overflow: hidden;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-
-      iframe,
-      video {
-        display: block !important;
-      }
     }
+  }
 
-    &[data-type="html"] {
-      video {
-        cursor: auto;
-        max-height: $slide-max-height;
-        max-width: $slide-max-width;
-      }
-    }
+  [data-type="iframe"] {
+    /* Fix iframe scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 0, 0);
 
-    &[data-type="iframe"] {
-      /* Fix iframe scrolling on iOS */
-      -webkit-overflow-scrolling: touch;
-      transform: translate3d(0, 0, 0);
-
-      iframe {
-        height: $slide-max-height;
-        width: $slide-max-width;
-      }
+    iframe {
+      height: $slide-max-height;
+      width: $slide-max-width;
     }
   }
 
