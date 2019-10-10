@@ -51,11 +51,11 @@
       }
     }
 
-    &--is-draggable .content {
+    &--is-draggable .tobi-content {
       cursor: grab;
     }
 
-    &--is-dragging .content {
+    &--is-dragging .tobi-content {
       cursor: grabbing;
     }
   }
