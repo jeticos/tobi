@@ -127,14 +127,11 @@
 
   /* Buttons */
   > button {
-    align-items: center;
     background-color: $button-background;
     border: em(1) solid transparent;
     color: $button-color;
     cursor: pointer;
-    display: flex;
     font: inherit;
-    justify-content: center;
     line-height: 1;
     margin: 0;
     opacity: 0.5;
@@ -209,12 +206,9 @@
 
   /* Counter */
   &-counter {
-    align-items: center;
     background-color: $counter-background;
     color: $counter-color;
-    display: flex;
     font-size: em(20);
-    justify-content: center;
     left: em(18);
     line-height: 1;
     position: absolute;
@@ -263,12 +257,9 @@
     }
 
     &-icon {
-      align-items: center;
       background-color: $zoom-icon-background;
       bottom: 0;
       color: $zoom-icon-color;
-      display: flex;
-      justify-content: center;
       line-height: 1;
       position: absolute;
       right: 0;
