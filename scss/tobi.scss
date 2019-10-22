@@ -33,7 +33,7 @@
   }
 
   /* Slider */
-  &-slider {
+  &__slider {
     bottom: 0;
     left: 0;
     position: absolute;
@@ -61,7 +61,7 @@
   }
 
   /* Slide */
-  &-slide {
+  &__slide {
     align-items: center;
     display: flex;
     height: 100%;
@@ -170,8 +170,8 @@
       }
     }
 
-    &.prev,
-    &.next {
+    &.tobi__prev,
+    &.tobi__next {
       top: calc(50% - #{em(35)});
 
       svg {
@@ -180,15 +180,15 @@
       }
     }
 
-    &.prev {
+    &.tobi__prev {
       left: 0;
     }
 
-    &.next {
+    &.tobi__next {
       right: 0;
     }
 
-    &.close {
+    &.tobi__close {
       right: em(5);
       top: em(18);
 
@@ -205,7 +205,7 @@
   }
 
   /* Counter */
-  &-counter {
+  &__counter {
     background-color: $counter-background;
     color: $counter-color;
     font-size: em(20);
@@ -256,7 +256,7 @@
       display: block;
     }
 
-    &-icon {
+    &__icon {
       background-color: $zoom-icon-background;
       bottom: 0;
       color: $zoom-icon-color;
