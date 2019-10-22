@@ -5,7 +5,7 @@
 ![Dependecies](https://img.shields.io/badge/Dependencies-none-1a2a3a.svg)
 [![Amazon wishlist](https://img.shields.io/badge/Amazon_wishlist-0366d6.svg)](https://www.amazon.de/hz/wishlist/ls/29WXITO63O0BX)
 
-An accessible, simple and light-weight open source lightbox script with no dependencies.
+An accessible, open-source lightbox with no dependencies.
 
 [Play on CodePen](https://codepen.io/collection/nbqJVV)
 
@@ -47,7 +47,6 @@ An accessible, simple and light-weight open source lightbox script with no depen
 - Touch & Mouse drag support:
   - Drag/ Swipe horizontal to navigate through slides
   - Drag/ Swipe vertical to close Tobi
-- light-weight
 - Responsive
 - Support iframes
 - Support inline HTML
@@ -146,7 +145,7 @@ or a button with the class name `lightbox` and a `data-target` attribute that ma
 </button>
 ```
 
-In any case, the attribute `data-type` with the value `html` must be added.
+In both ways, the attribute `data-type` with the value `html` must be added.
 
 ### Iframe
 
@@ -168,7 +167,7 @@ or a button with the class name `lightbox` and a `data-target` attribute:
 </button>
 ```
 
-In any case, the attribute `data-type` with the value `iframe` must be added.
+In both ways, the attribute `data-type` with the value `iframe` must be added.
 
 #### Optional attributes
 
@@ -194,12 +193,12 @@ or a button with the class name `lightbox` and a `data-id` attribute with the Yo
 </button>
 ```
 
-In any case, the attribute `data-type` with the value `youtube` must be added.
+In both ways, the attribute `data-type` with the value `youtube` must be added.
 
 #### Optional attributes
 
 - `data-controls` indicates whether the video player controls are displayed: `0` do not display and `1` display controls in the player.
-- `data-height` set the height and `data-width` the width of the player. I recommend to use a external library for responsive iframes.
+- `data-height` set the height and `data-width` the width of the player. I recommend using an external library for responsive iframes.
 
 ## Grouping
 
