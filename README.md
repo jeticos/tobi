@@ -1,5 +1,7 @@
 # Tobi
 
+## This will be the last 1.x.x version. Check out [Tobii](https://github.com/rqrauhvmra/Tobii) (version 2.x.x)
+
 [![Version](https://img.shields.io/badge/Version-1.9.1-1a2a3a.svg)](https://github.com/rqrauhvmra/Tobi/releases)
 [![License](https://img.shields.io/badge/License-MIT-1a2a3a.svg)](https://github.com/rqrauhvmra/tobi/blob/master/LICENSE.md)
 ![Dependecies](https://img.shields.io/badge/Dependencies-none-1a2a3a.svg)
@@ -13,23 +15,28 @@ An accessible, open-source lightbox with no dependencies.
 
 ## Table of contents
 
-- [Features](#features)
-- [Get Tobi](#get-tobi)
-  - [Download](#download)
-  - [Package managers](#package-managers)
-- [Usage](#usage)
-- [Media types](#media-types)
-  - [Image](#image)
-  - [Inline HTML](#inline-html)
-  - [Iframe](#iframe)
-  - [YouTube](#youtube)
-- [Grouping](#grouping)
-- [Options](#options)
-- [API](#api)
-- [Browser support](#browser-support)
-- [To do](#to-do)
-- [Contributing](#contributing)
-- [License](#license)
+- [Tobi](#tobi)
+  - [This will be the last 1.x.x version. Check out Tobii (version 2.x.x)](#this-will-be-the-last-1xx-version-check-out-tobii-version-2xx)
+  - [Table of contents](#table-of-contents)
+  - [Features](#features)
+  - [Get Tobi](#get-tobi)
+    - [Download](#download)
+    - [Package managers](#package-managers)
+  - [Usage](#usage)
+  - [Media types](#media-types)
+    - [Image](#image)
+    - [Inline HTML](#inline-html)
+    - [Iframe](#iframe)
+      - [Optional attributes](#optional-attributes)
+    - [YouTube](#youtube)
+      - [Optional attributes](#optional-attributes-1)
+  - [Grouping](#grouping)
+  - [Options](#options)
+  - [API](#api)
+  - [Browser support](#browser-support)
+  - [To do](#to-do)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Features
 
