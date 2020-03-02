@@ -15,28 +15,23 @@ An accessible, open-source lightbox with no dependencies.
 
 ## Table of contents
 
-- [Tobi](#tobi)
-  - [This will be the last 1.x.x version. Check out Tobii (version 2.x.x)](#this-will-be-the-last-1xx-version-check-out-tobii-version-2xx)
-  - [Table of contents](#table-of-contents)
-  - [Features](#features)
-  - [Get Tobi](#get-tobi)
-    - [Download](#download)
-    - [Package managers](#package-managers)
-  - [Usage](#usage)
-  - [Media types](#media-types)
-    - [Image](#image)
-    - [Inline HTML](#inline-html)
-    - [Iframe](#iframe)
-      - [Optional attributes](#optional-attributes)
-    - [YouTube](#youtube)
-      - [Optional attributes](#optional-attributes-1)
-  - [Grouping](#grouping)
-  - [Options](#options)
-  - [API](#api)
-  - [Browser support](#browser-support)
-  - [To do](#to-do)
-  - [Contributing](#contributing)
-  - [License](#license)
+- [Features](#features)
+- [Get Tobi](#get-tobi)
+  - [Download](#download)
+  - [Package managers](#package-managers)
+- [Usage](#usage)
+- [Media types](#media-types)
+  - [Image](#image)
+  - [Inline HTML](#inline-html)
+  - [Iframe](#iframe)
+  - [YouTube](#youtube)
+- [Grouping](#grouping)
+- [Options](#options)
+- [API](#api)
+- [Browser support](#browser-support)
+- [To do](#to-do)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
@@ -283,7 +278,8 @@ The following options are available:
 | `currentSlide()` | Return the current slide index. |
 | `selectGroup()` | Select a specific group. |
 | `currentGroup()` | Return the current group. |
-| `destroy()` | Destroy Tobi. Optional `callback` (function). |
+| `reset(callback)` | Reset Tobi. Optional `callback` (function). |
+| `destroy(callback)` | Destroy Tobi. Optional `callback` (function). |
 
 ## Browser support
 
