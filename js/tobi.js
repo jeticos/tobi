@@ -1364,11 +1364,11 @@
     }
 
     /**
-     * Destroy Tobi
+     * Reset the lightbox
      *
-     * @param {function} callback - Optional callback to call after destroy
+     * @param {function} callback - Optional callback to call after reset
      */
-    const destroy = function destroy (callback) {
+    const reset = function reset (callback) {
       if (isOpen()) {
         close()
       }
@@ -1384,13 +1384,26 @@
         })
       })
 
-      lightbox.parentNode.removeChild(lightbox)
-
       groups = {}
       newGroup = activeGroup = null
       figcaptionId = 0
 
       // TODO
+
+      if (callback) {
+        callback.call(this)
+      }
+    }
+
+    /**
+     * Destroy Tobi
+     *
+     * @param {function} callback - Optional callback to call after destroy
+     */
+    const destroy = function destroy (callback) {
+      reset()
+
+      lightbox.parentNode.removeChild(lightbox)
 
       if (callback) {
         callback.call(this)
@@ -1467,6 +1480,7 @@
       close: close,
       add: checkDependencies,
       remove: remove,
+      reset: reset,
       destroy: destroy,
       isOpen: isOpen,
       currentSlide: currentSlide,
