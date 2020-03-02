@@ -28,8 +28,32 @@
      * Global variables
      *
      */
-    let config = {}
     const browserWindow = window
+    const focusableElements = [
+      'a[href]:not([tabindex^="-"]):not([inert])',
+      'area[href]:not([tabindex^="-"]):not([inert])',
+      'input:not([disabled]):not([inert])',
+      'select:not([disabled]):not([inert])',
+      'textarea:not([disabled]):not([inert])',
+      'button:not([disabled]):not([inert])',
+      'iframe:not([tabindex^="-"]):not([inert])',
+      'audio:not([tabindex^="-"]):not([inert])',
+      'video:not([tabindex^="-"]):not([inert])',
+      '[contenteditable]:not([tabindex^="-"]):not([inert])',
+      '[tabindex]:not([tabindex^="-"]):not([inert])'
+    ]
+    const waitingEls = []
+    const player = []
+    const groupAtts = {
+      gallery: [],
+      slider: null,
+      sliderElements: [],
+      elementsLength: 0,
+      currentIndex: 0,
+      x: 0
+    }
+
+    let config = {}
     let figcaptionId = 0
     let lightbox = null
     let prevButton = null
@@ -47,17 +71,7 @@
     let offsetTmp = null
     let resizeTicking = false
     let isYouTubeDependencieLoaded = false
-    const waitingEls = []
-    const player = []
     let playerId = 0
-    const groupAtts = {
-      gallery: [],
-      slider: null,
-      sliderElements: [],
-      elementsLength: 0,
-      currentIndex: 0,
-      x: 0
-    }
     let groups = {}
     let newGroup = null
     let activeGroup = null
@@ -823,6 +837,9 @@
       const container = groups[activeGroup].sliderElements[index].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
 
+      // Add active slide class
+      groups[activeGroup].sliderElements[index].classList.add('tobi__slide--is-active')
+
       supportedElements[type].onLoad(container)
     }
 
@@ -877,6 +894,9 @@
 
       const container = groups[activeGroup].sliderElements[index].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
+
+      // Remove active slide class
+      groups[activeGroup].sliderElements[index].classList.remove('tobi__slide--is-active')
 
       supportedElements[type].onLeave(container)
     }
@@ -1022,11 +1042,26 @@
         prev()
       } else if (event.target === nextButton) {
         next()
-      } else if (event.target === closeButton || (event.target.className === 'tobi__slide' && config.docClose)) {
+      } else if (event.target === closeButton || (event.target.classList.contains('tobi__slide') && config.docClose)) {
         close()
       }
 
       event.stopPropagation()
+    }
+
+    /**
+     * Get the focusable children of the given element
+     *
+     * @return {Array<Element>}
+     */
+    const getFocusableChildren = function getFocusableChildren () {
+      return Array.prototype.slice.call(lightbox.querySelectorAll('.tobi__slide--is-active ' + focusableElements.join(','), '.tobi__close', 'tobi__prev', '.tobi__next')).filter(function (child) {
+        return !!(
+          child.offsetWidth ||
+          child.offsetHeight ||
+          child.getClientRects().length
+        )
+      })
     }
 
     /**
@@ -1036,20 +1071,22 @@
      * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
      */
     const keydownHandler = function keydownHandler (event) {
+      const focusableChildren = getFocusableChildren()
+      const FocusedItemIndex = focusableChildren.indexOf(document.activeElement)
+
       if (event.keyCode === 9 || event.code === 'Tab') {
-        // `TAB` Key: Navigate to the next / previous focusable element
-        if (event.shiftKey) {
-          // Step backwards in the tab-order
-          if (document.activeElement === firstFocusableEl) {
-            lastFocusableEl.focus()
-            event.preventDefault()
-          }
-        } else {
-          // Step forward in the tab-order
-          if (document.activeElement === lastFocusableEl) {
-            firstFocusableEl.focus()
-            event.preventDefault()
-          }
+        // If the SHIFT key is being pressed while tabbing (moving backwards) and
+        // the currently focused item is the first one, move the focus to the last
+        // focusable item from the slide
+        if (event.shiftKey && FocusedItemIndex === 0) {
+          focusableChildren[focusableChildren.length - 1].focus()
+          event.preventDefault()
+          // If the SHIFT key is not being pressed (moving forwards) and the currently
+          // focused item is the last one, move the focus to the first focusable item
+          // from the slide
+        } else if (!event.shiftKey && FocusedItemIndex === focusableChildren.length - 1) {
+          focusableChildren[0].focus()
+          event.preventDefault()
         }
       } else if (event.keyCode === 27 || event.code === 'Escape') {
         // `ESC` Key: Close Tobi
