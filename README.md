@@ -1,13 +1,13 @@
 # Tobi
 
-[![Version](https://img.shields.io/badge/Version-1.9.0-1a2a3a.svg)](https://github.com/rqrauhvmra/Tobi/releases)
+## Tobi 1.9.x will be the last 1.x.x version. Check out [Tobii](https://github.com/rqrauhvmra/Tobii) (version 2.x.x)
+
+[![Version](https://img.shields.io/badge/Version-1.9.1-1a2a3a.svg)](https://github.com/rqrauhvmra/Tobi/releases)
 [![License](https://img.shields.io/badge/License-MIT-1a2a3a.svg)](https://github.com/rqrauhvmra/tobi/blob/master/LICENSE.md)
 ![Dependecies](https://img.shields.io/badge/Dependencies-none-1a2a3a.svg)
 [![Amazon wishlist](https://img.shields.io/badge/Amazon_wishlist-0366d6.svg)](https://www.amazon.de/hz/wishlist/ls/29WXITO63O0BX)
 
-An accessible, simple and light-weight open source lightbox script with no dependencies.
-
-[Play on CodePen](https://codepen.io/collection/nbqJVV)
+An accessible, open-source lightbox with no dependencies.
 
 ![Open slide with a picture of the Berlin television tower](https://rqrauhvmra.com/tobi/tobi.png)
 
@@ -47,7 +47,6 @@ An accessible, simple and light-weight open source lightbox script with no depen
 - Touch & Mouse drag support:
   - Drag/ Swipe horizontal to navigate through slides
   - Drag/ Swipe vertical to close Tobi
-- light-weight
 - Responsive
 - Support iframes
 - Support inline HTML
@@ -68,7 +67,7 @@ Tobi is also available on npm.
 
 ## Usage
 
-You can install Tobi by linking the `.css` and `.js` files to your html file. The HTML code may look like this:
+You can install Tobi by linking the `.css` and `.js` files to your HTML file. The HTML code may look like this:
 
 ```html
 <!DOCTYPE html>
@@ -100,8 +99,6 @@ const tobi = new Tobi()
 
 ### Image
 
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/ZRZdwG)
-
 The standard way of using Tobi is a linked thumbnail image with the class name `lightbox` to a larger image:
 
 ```html
@@ -119,8 +116,6 @@ Instead of a thumbnail, you can also refer to a larger image with a textlink:
 ```
 
 ### Inline HTML
-
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/BOLxqj)
 
 For inline HTML, create an element with a unique ID:
 
@@ -146,11 +141,9 @@ or a button with the class name `lightbox` and a `data-target` attribute that ma
 </button>
 ```
 
-In any case, the attribute `data-type` with the value `html` must be added.
+In both ways, the attribute `data-type` with the value `html` must be added.
 
 ### Iframe
-
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/GXJwar)
 
 For an iframe, create a link with the class name `lightbox`:
 
@@ -168,15 +161,13 @@ or a button with the class name `lightbox` and a `data-target` attribute:
 </button>
 ```
 
-In any case, the attribute `data-type` with the value `iframe` must be added.
+In both ways, the attribute `data-type` with the value `iframe` must be added.
 
 #### Optional attributes
 
 - `data-height` set the height and `data-width` the width of the iframe.
 
 ### YouTube
-
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/rgpjXE)
 
 For an YouTube video, create a link with the class name `lightbox` and a `data-id` attribute with the YouTube video ID:
 
@@ -194,16 +185,14 @@ or a button with the class name `lightbox` and a `data-id` attribute with the Yo
 </button>
 ```
 
-In any case, the attribute `data-type` with the value `youtube` must be added.
+In both ways, the attribute `data-type` with the value `youtube` must be added.
 
 #### Optional attributes
 
 - `data-controls` indicates whether the video player controls are displayed: `0` do not display and `1` display controls in the player.
-- `data-height` set the height and `data-width` the width of the player. I recommend to use a external library for responsive iframes.
+- `data-height` set the height and `data-width` the width of the player. I recommend using an external library for responsive iframes.
 
 ## Grouping
-
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/PvKVxp)
 
 If you have a group of related types that you would like to combine into a set, add the `data-group` attribute:
 
@@ -226,8 +215,6 @@ If you have a group of related types that you would like to combine into a set, 
 ```
 
 ## Options
-
-[Play on CodePen](https://codepen.io/rqrauhvmra/pen/MBYEog)
 
 You can pass an object with custom options as an argument.
 
@@ -267,36 +254,28 @@ The following options are available:
 
 | Function | Description |
 | --- | --- |
-| `open(index, callback)` | Open Tobi. Optional with a specific slide with `index` (number). Optional `callback` (function) as a second argument. |
+| `open(index, callback)` | Open Tobii. Optional `index` (Integer), zero-based index of the slide to open. Optional `callback` (function). |
 | `next(callback)` | Show the next slide. Optional `callback` (function). |
 | `prev(callback)` | Show the previous slide. Optional `callback` (function). |
+| `selectGroup(value)` | Select a group with `value` (string), name of the group to select. |
 | `close(callback)` | Close Tobi. Optional `callback` (function). |
-| `add(element, callback)` | Add an `element` (DOM element) ([example on CodePen](https://codepen.io/rqrauhvmra/pen/vzbXxQ)). Optional `callback` (function) as a second argument ([example on CodePen](https://codepen.io/rqrauhvmra/pen/qyEmXR)). |
-| `remove(element, callback)` | Remove an `element` (DOM element). Optional `callback` (function) as a second argument. |
+| `add(element, callback)` | Add `element` (DOM element). Optional `callback` (function). |
+| `remove(element, callback)` | Remove `element` (DOM element). Optional `callback` (function). |
 | `isOpen()` | Check if Tobi is open. |
 | `currentSlide()` | Return the current slide index. |
-| `selectGroup()` | Select a specific group. |
 | `currentGroup()` | Return the current group. |
-| `destroy()` | Destroy Tobi. Optional `callback` (function). |
+| `reset(callback)` | Reset Tobi. Optional `callback` (function). |
+| `destroy(callback)` | Destroy Tobi. Optional `callback` (function). |
 
 ## Browser support
 
-Tobi has been tested in the following browsers (all the latest versions):
+Tobii supports the following browser (all the latest versions):
 
 - Chrome
 - Firefox
 - Internet Explorer
 - Edge
 - Safari
-
-## To do
-
-- [ ] Support for `srcset` and `picture`
-
-## Contributing
-
-- Open an issue or a pull request to suggest changes or additions
-- Spread the word
 
 ## License
 

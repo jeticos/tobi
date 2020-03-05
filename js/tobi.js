@@ -2,7 +2,7 @@
  * Tobi
  *
  * @author rqrauhvmra
- * @version 1.9.0
+ * @version 1.9.1
  * @url https://github.com/rqrauhvmra/Tobi
  *
  * MIT License
@@ -28,8 +28,32 @@
      * Global variables
      *
      */
-    let config = {}
     const browserWindow = window
+    const focusableElements = [
+      'a[href]:not([tabindex^="-"]):not([inert])',
+      'area[href]:not([tabindex^="-"]):not([inert])',
+      'input:not([disabled]):not([inert])',
+      'select:not([disabled]):not([inert])',
+      'textarea:not([disabled]):not([inert])',
+      'button:not([disabled]):not([inert])',
+      'iframe:not([tabindex^="-"]):not([inert])',
+      'audio:not([tabindex^="-"]):not([inert])',
+      'video:not([tabindex^="-"]):not([inert])',
+      '[contenteditable]:not([tabindex^="-"]):not([inert])',
+      '[tabindex]:not([tabindex^="-"]):not([inert])'
+    ]
+    const waitingEls = []
+    const player = []
+    const groupAtts = {
+      gallery: [],
+      slider: null,
+      sliderElements: [],
+      elementsLength: 0,
+      currentIndex: 0,
+      x: 0
+    }
+
+    let config = {}
     let figcaptionId = 0
     let lightbox = null
     let prevButton = null
@@ -47,17 +71,7 @@
     let offsetTmp = null
     let resizeTicking = false
     let isYouTubeDependencieLoaded = false
-    const waitingEls = []
-    const player = []
     let playerId = 0
-    const groupAtts = {
-      gallery: [],
-      slider: null,
-      sliderElements: [],
-      elementsLength: 0,
-      currentIndex: 0,
-      x: 0
-    }
     let groups = {}
     let newGroup = null
     let activeGroup = null
@@ -668,10 +682,9 @@
             const sliderElement = document.createElement('div')
             const sliderElementContent = document.createElement('div')
 
-            sliderElement.className = 'tobi__slider__slide'
+            sliderElement.className = 'tobi__slide'
             sliderElement.style.position = 'absolute'
             sliderElement.style.left = groups[newGroup].x * 100 + '%'
-            sliderElementContent.className = 'tobi__slider__slide__content'
 
             // Create type elements
             supportedElements[index].init(el, sliderElementContent)
@@ -778,7 +791,7 @@
       lastFocus.focus()
 
       // Don't forget to cleanup our current element
-      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[groups[activeGroup].currentIndex].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onLeave(container)
@@ -804,7 +817,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onPreload(container)
@@ -821,8 +834,11 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
+
+      // Add active slide class
+      groups[activeGroup].sliderElements[index].classList.add('tobi__slide--is-active')
 
       supportedElements[type].onLoad(container)
     }
@@ -876,8 +892,11 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
+
+      // Remove active slide class
+      groups[activeGroup].sliderElements[index].classList.remove('tobi__slide--is-active')
 
       supportedElements[type].onLeave(container)
     }
@@ -893,7 +912,7 @@
         return
       }
 
-      const container = groups[activeGroup].sliderElements[index].querySelector('.tobi__slider__slide__content')
+      const container = groups[activeGroup].sliderElements[index].querySelector('[data-type]')
       const type = container.getAttribute('data-type')
 
       supportedElements[type].onCleanup(container)
@@ -1023,11 +1042,26 @@
         prev()
       } else if (event.target === nextButton) {
         next()
-      } else if (event.target === closeButton || (event.target.className === 'tobi__slider__slide' && config.docClose)) {
+      } else if (event.target === closeButton || (event.target.classList.contains('tobi__slide') && config.docClose)) {
         close()
       }
 
       event.stopPropagation()
+    }
+
+    /**
+     * Get the focusable children of the given element
+     *
+     * @return {Array<Element>}
+     */
+    const getFocusableChildren = function getFocusableChildren () {
+      return Array.prototype.slice.call(lightbox.querySelectorAll('.tobi__slide--is-active ' + focusableElements.join(','), '.tobi__close', 'tobi__prev', '.tobi__next')).filter(function (child) {
+        return !!(
+          child.offsetWidth ||
+          child.offsetHeight ||
+          child.getClientRects().length
+        )
+      })
     }
 
     /**
@@ -1037,20 +1071,22 @@
      * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
      */
     const keydownHandler = function keydownHandler (event) {
+      const focusableChildren = getFocusableChildren()
+      const FocusedItemIndex = focusableChildren.indexOf(document.activeElement)
+
       if (event.keyCode === 9 || event.code === 'Tab') {
-        // `TAB` Key: Navigate to the next / previous focusable element
-        if (event.shiftKey) {
-          // Step backwards in the tab-order
-          if (document.activeElement === firstFocusableEl) {
-            lastFocusableEl.focus()
-            event.preventDefault()
-          }
-        } else {
-          // Step forward in the tab-order
-          if (document.activeElement === lastFocusableEl) {
-            firstFocusableEl.focus()
-            event.preventDefault()
-          }
+        // If the SHIFT key is being pressed while tabbing (moving backwards) and
+        // the currently focused item is the first one, move the focus to the last
+        // focusable item from the slide
+        if (event.shiftKey && FocusedItemIndex === 0) {
+          focusableChildren[focusableChildren.length - 1].focus()
+          event.preventDefault()
+          // If the SHIFT key is not being pressed (moving forwards) and the currently
+          // focused item is the last one, move the focus to the first focusable item
+          // from the slide
+        } else if (!event.shiftKey && FocusedItemIndex === focusableChildren.length - 1) {
+          focusableChildren[0].focus()
+          event.preventDefault()
         }
       } else if (event.keyCode === 27 || event.code === 'Escape') {
         // `ESC` Key: Close Tobi
@@ -1183,6 +1219,17 @@
     }
 
     /**
+     * Contextmenu event handler
+     * This is a fix for chromium based browser on mac.
+     * The 'contextmenu' terminates a mouse event sequence.
+     * https://bugs.chromium.org/p/chromium/issues/detail?id=506801
+     *
+     */
+    const contextmenuHandler = function contextmenuHandler (event) {
+      pointerDown = false
+    }
+
+    /**
      * Decide whether to do horizontal of vertical swipe
      *
      */
@@ -1226,6 +1273,7 @@
         lightbox.addEventListener('mousedown', mousedownHandler)
         lightbox.addEventListener('mouseup', mouseupHandler)
         lightbox.addEventListener('mousemove', mousemoveHandler)
+        lightbox.addEventListener('contextmenu', contextmenuHandler)
       }
     }
 
@@ -1253,6 +1301,7 @@
         lightbox.removeEventListener('mousedown', mousedownHandler)
         lightbox.removeEventListener('mouseup', mouseupHandler)
         lightbox.removeEventListener('mousemove', mousemoveHandler)
+        lightbox.removeEventListener('contextmenu', contextmenuHandler)
       }
     }
 
@@ -1328,11 +1377,11 @@
     }
 
     /**
-     * Destroy Tobi
+     * Reset the lightbox
      *
-     * @param {function} callback - Optional callback to call after destroy
+     * @param {function} callback - Optional callback to call after reset
      */
-    const destroy = function destroy (callback) {
+    const reset = function reset (callback) {
       if (isOpen()) {
         close()
       }
@@ -1348,13 +1397,26 @@
         })
       })
 
-      lightbox.parentNode.removeChild(lightbox)
-
       groups = {}
       newGroup = activeGroup = null
       figcaptionId = 0
 
       // TODO
+
+      if (callback) {
+        callback.call(this)
+      }
+    }
+
+    /**
+     * Destroy Tobi
+     *
+     * @param {function} callback - Optional callback to call after destroy
+     */
+    const destroy = function destroy (callback) {
+      reset()
+
+      lightbox.parentNode.removeChild(lightbox)
 
       if (callback) {
         callback.call(this)
@@ -1431,6 +1493,7 @@
       close: close,
       add: checkDependencies,
       remove: remove,
+      reset: reset,
       destroy: destroy,
       isOpen: isOpen,
       currentSlide: currentSlide,

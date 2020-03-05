@@ -1,7 +1,7 @@
 {
   "name": "@rqrauhvmra/tobi",
-  "version": "1.9.0",
-  "description": "An accessible, simple and light-weight open source lightbox script with no dependencies.",
+  "version": "1.9.1",
+  "description": "An accessible, open-source lightbox with no dependencies.",
   "main": "js/tobi.js",
   "style": "css/tobi.css",
   "devDependencies": {
@@ -34,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/rqrauhvmra/tobi/issues"
   },
-  "homepage": "https://github.com/rqrauhvmra/tobi"
+  "homepage": "https://github.com/rqrauhvmra/tobi",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@rqrauhvmra"
+  }
 }
