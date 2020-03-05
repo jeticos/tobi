@@ -1219,6 +1219,17 @@
     }
 
     /**
+     * Contextmenu event handler
+     * This is a fix for chromium based browser on mac.
+     * The 'contextmenu' terminates a mouse event sequence.
+     * https://bugs.chromium.org/p/chromium/issues/detail?id=506801
+     *
+     */
+    const contextmenuHandler = function contextmenuHandler (event) {
+      pointerDown = false
+    }
+
+    /**
      * Decide whether to do horizontal of vertical swipe
      *
      */
@@ -1262,6 +1273,7 @@
         lightbox.addEventListener('mousedown', mousedownHandler)
         lightbox.addEventListener('mouseup', mouseupHandler)
         lightbox.addEventListener('mousemove', mousemoveHandler)
+        lightbox.addEventListener('contextmenu', contextmenuHandler)
       }
     }
 
@@ -1289,6 +1301,7 @@
         lightbox.removeEventListener('mousedown', mousedownHandler)
         lightbox.removeEventListener('mouseup', mouseupHandler)
         lightbox.removeEventListener('mousemove', mousemoveHandler)
+        lightbox.removeEventListener('contextmenu', contextmenuHandler)
       }
     }
 
