@@ -1055,7 +1055,7 @@
      * @return {Array<Element>}
      */
     const getFocusableChildren = function getFocusableChildren () {
-      return Array.prototype.slice.call(lightbox.querySelectorAll(".tobii__close:not([disabled]), .tobii__prev:not([disabled]), .tobii__next:not([disabled]), .tobi__slide--is-active + " + focusableElements.join(', .tobi__slide--is-active '))).filter(function (child) {
+      return Array.prototype.slice.call(lightbox.querySelectorAll(".tobi__close:not([disabled]), .tobi__prev:not([disabled]), .tobi__next:not([disabled]), .tobi__slide--is-active + " + focusableElements.join(', .tobi__slide--is-active '))).filter(function (child) {
         return !!(
           child.offsetWidth ||
           child.offsetHeight ||
