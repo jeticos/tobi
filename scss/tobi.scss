@@ -2,7 +2,7 @@
   '_variables.scss',
   '_functions.scss';
 
-/* Lightbox */
+// Lightbox
 .tobi {
   background-color: $lightbox-background;
   bottom: 0;
@@ -27,12 +27,12 @@
     box-sizing: inherit;
   }
 
-  /* Hide scrollbar if lightbox is displayed */
+  // Hide scrollbar if lightbox is displayed
   &-is-open {
     overflow-y: hidden;
   }
 
-  /* Slider */
+  // Slider
   &__slider {
     bottom: 0;
     left: 0;
@@ -60,7 +60,7 @@
     }
   }
 
-  /* Slide */
+  // Slide
   &__slide {
     align-items: center;
     display: flex;
@@ -69,7 +69,11 @@
     width: 100%;
   }
 
-  /* Slide content */
+  &--is-active {
+    visibility: hidden;
+  }
+
+  // Slide content
   [data-type] {
     max-height: $slide-max-height;
     max-width: $slide-max-width;
@@ -81,7 +85,7 @@
     video {
       display: block !important;
     }
-    
+
     > figure {
       margin: 0;
       position: relative;
@@ -125,7 +129,7 @@
     }
   }
 
-  /* Buttons */
+  // Buttons
   > button {
     background-color: $button-background;
     border: em(1) solid transparent;
@@ -204,7 +208,7 @@
     }
   }
 
-  /* Counter */
+  // Counter
   &__counter {
     background-color: $counter-background;
     color: $counter-color;
@@ -220,7 +224,7 @@
     }
   }
 
-  /* Loader */
+  // Loader
   &-loader {
     display: inline-block;
     height: em(100);
@@ -244,7 +248,7 @@
     }
   }
 
-  /* Zoom */
+  // Zoom
   &-zoom {
     border: 0;
     box-shadow: none;
