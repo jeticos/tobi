@@ -66,7 +66,7 @@
   width: 100%;
 }
 
-.tobi--is-active {
+.tobi__slide:not(.tobi__slide--is-active) {
   visibility: hidden;
 }
 

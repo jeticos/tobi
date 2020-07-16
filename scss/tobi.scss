@@ -67,10 +67,10 @@
     height: 100%;
     justify-content: center;
     width: 100%;
-  }
 
-  &--is-active {
-    visibility: hidden;
+    &:not(.tobi__slide--is-active) {
+      visibility: hidden;
+    }
   }
 
   // Slide content
